@@ -50,6 +50,8 @@ class Player extends PositionComponent
   @override
   void onCollision(
       Set<Vector2> points, /*Collidable*/ PositionComponent other) {
+    print('------------------something was hit!!!!!');
+
     if (other is ScreenHitbox) {
       if (squareDirection == 1) {
         print('something was hit');
