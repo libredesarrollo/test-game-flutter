@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:testgame/components/background.dart';
+import 'package:testgame/components/circle_position_component.dart';
 import 'package:testgame/components/tiger.dart';
 import 'components/player.dart';
 
@@ -22,14 +23,41 @@ void main() async {
 }
 
 class GoldRush extends FlameGame
-    with /*HasCollidables*/ HasCollisionDetection, TapDetector, KeyboardEvents {
+    with /*HasCollidables*/ HasCollisionDetection,
+        TapDetector,
+        /*KeyboardHandler,*/ KeyboardEvents,
+        HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     super.onLoad();
 
     //  add(Player());
     //add(Background());
-    add(Tiger());
+
+    // add(
+    //   KeyboardListenerComponent(
+    //     keyDown: {
+    //       LogicalKeyboardKey.arrowDown: (keysPressed) {
+    //         return true;
+    //       },
+    //       LogicalKeyboardKey.arrowUp: (keysPressed) {
+    //         return true;
+    //       },
+    //     },
+    //     keyUp: {
+    //       LogicalKeyboardKey.arrowDown: (keysPressed) {
+    //         print('LogicalKeyboardKey.arrowDown');
+    //         return true;
+    //       },
+    //       LogicalKeyboardKey.arrowUp: (keysPressed) {
+    //         return true;
+    //       },
+    //     },
+    //   ),
+    // );
+    // add(Player());
+    add(CirclePositionComponent());
+    // add(Tiger());
     // add(ScreenHitbox());
   }
 
@@ -45,11 +73,23 @@ class GoldRush extends FlameGame
     return true;
   }
 
+  // @override
+  // bool onKeyEvent(
+  //   RawKeyEvent event,
+  //   Set<LogicalKeyboardKey> keysPressed,
+  // ) {
+  //   print('father');
+
+  //   return true;
+  // }
+
   @override
   KeyEventResult onKeyEvent(
     RawKeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
+    super.onKeyEvent(event, keysPressed);
+
     final isKeyDown = event is RawKeyDownEvent;
 
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
@@ -63,6 +103,6 @@ class GoldRush extends FlameGame
       }
       return KeyEventResult.handled;
     }
-    return KeyEventResult.ignored;
+    return KeyEventResult.handled;
   }
 }

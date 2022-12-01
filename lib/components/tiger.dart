@@ -1,3 +1,4 @@
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 
@@ -6,7 +7,9 @@ import 'package:flame/sprite.dart';
 
 import 'dart:ui';
 
-class Tiger extends SpriteComponent {
+import 'package:flutter/services.dart';
+
+class Tiger extends SpriteComponent with KeyboardHandler {
   late double screenWidth, screenHeight, centerX, centerY;
   late double tigerSizeWidth = 512.0, tigerSizeHeight = 512.0;
 
@@ -27,5 +30,29 @@ class Tiger extends SpriteComponent {
     position = Vector2(centerX, centerY);
     size = Vector2(tigerSizeWidth, tigerSizeHeight);
     sprite = await Sprite.load('tiger.png');
+  }
+
+  @override
+  bool onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      position = Vector2(centerX, centerY--);
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
+      position = Vector2(centerX, centerY++);
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
+      position = Vector2(centerX++, centerY);
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+      position = Vector2(centerX--, centerY);
+    }
+
+    return true;
   }
 }

@@ -7,8 +7,7 @@ import 'package:flame/palette.dart';
 
 // https://github.com/flame-engine/flame/blob/main/examples/lib/stories/input/gesture_hitboxes_example.dart
 
-class Player extends PositionComponent
-    with /*Collidable, HasHitboxes,*/ CollisionCallbacks, GestureHitboxes {
+class CirclePositionComponent extends PositionComponent {
   static const int squareSpeed = 250; // The speed that our square will animate
   static final squarePaint =
       BasicPalette.green.paint(); // The color of the square
@@ -43,24 +42,6 @@ class Player extends PositionComponent
     hitbox.paint.color = baseColor;
     hitbox.renderShape = true;
     add(hitbox);
-
-    //addHitbox(HitboxRectangle());
-  }
-
-  @override
-  void onCollision(
-      Set<Vector2> points, /*Collidable*/ PositionComponent other) {
-    print('------------------something was hit!!!!!');
-
-    if (other is ScreenHitbox) {
-      if (squareDirection == 1) {
-        print('something was hit');
-        squareDirection = -1;
-      } else {
-        print('something was hit 2');
-        squareDirection = 1;
-      }
-    }
   }
 
   @override
@@ -74,7 +55,5 @@ class Player extends PositionComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-
-    //renderHitboxes(canvas, paint: squarePaint);
   }
 }
