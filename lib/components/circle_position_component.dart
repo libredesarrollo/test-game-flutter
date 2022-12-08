@@ -1,45 +1,39 @@
 import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/geometry.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/palette.dart';
 
-// https://github.com/flame-engine/flame/blob/main/examples/lib/stories/input/gesture_hitboxes_example.dart
+import 'dart:math';
 
-class CirclePositionComponent extends PositionComponent {
-  static const int squareSpeed = 250; // The speed that our square will animate
-  static final squarePaint =
-      BasicPalette.green.paint(); // The color of the square
-  static final squareWidth = 100.0,
-      squareHeight =
-          100.0; // The width and height of our square will be 100 x 100
+class CirclePositionComponent extends PositionComponent
+    with CollisionCallbacks {
+  static const int circleSpeed = 250;
+  static const circleWidth = 100.0, circleHeight = 100.0;
 
-  // The direction our square is travelling in, 1 for left to right, -1 for right to left
-  int squareDirection = 1;
+  int circleDirectionX = 1;
+  int circleDirectionY = 1;
   late double screenWidth, screenHeight, centerX, centerY;
 
   final ShapeHitbox hitbox = CircleHitbox();
-  late final Color baseColor;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
 
-    // Get the width and height of our screen canvas
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
 
-    // Calculate the center of the screen, allowing for the adjustment for the squares size
-    centerX = (screenWidth / 2) - (squareWidth / 2);
-    centerY = (screenHeight / 2) - (squareHeight / 2);
+    centerX = (screenWidth / 2) - (circleWidth / 2);
+    centerY = (screenHeight / 2) - (circleHeight / 2);
 
-    // Set the initial position of the green square at the center of the screen with a size of 100 width and height
-    position = Vector2(centerX, centerY);
-    size = Vector2(squareWidth, squareHeight);
+    // position = Vector2(centerX, centerY);
+    Random random = Random();
+    position = Vector2(random.nextDouble() * 300, random.nextDouble() * 300);
+    size = Vector2(circleWidth, circleHeight);
+    // hitbox.paint.color = BasicPalette.green.color;
+    hitbox.paint.color = ColorExtension.random();
 
-    baseColor = ColorExtension.random(withAlpha: 0.8, base: 100);
-    hitbox.paint.color = baseColor;
     hitbox.renderShape = true;
     add(hitbox);
   }
@@ -47,13 +41,48 @@ class CirclePositionComponent extends PositionComponent {
   @override
   void update(double deltaTime) {
     super.update(deltaTime);
+    // position.x += circleSpeed * circleDirection * deltaTime;
 
-    // Update the x position of the square based on the speed and direction and the time elapsed
-    position.x += squareSpeed * squareDirection * deltaTime;
+    position.x += circleSpeed * circleDirectionX * deltaTime;
+    position.y += circleSpeed * circleDirectionY * deltaTime;
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+  }
+
+  @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    // print(points.first[1]);
+
+    if (other is ScreenHitbox) {
+      if (circleDirectionX == 1) {
+        // print('hit!');
+        circleDirectionX = -1;
+        circleDirectionY = 1 * -1;
+      } else {
+        // print('hit!');
+        circleDirectionX = 1;
+        circleDirectionY = 1 * -1;
+      }
+    }
+
+    if (points.first[1] == 0.0) {
+      // top
+      circleDirectionY = 1;
+      circleDirectionX *= -1; // invertimos la direccion en el X
+    }
+    if (points.first[0] == 0.0) {
+      // left
+      circleDirectionX = 1;
+      circleDirectionY *= -1; // invertimos la direccion en el X
+    }
+
+    if (other is CirclePositionComponent) {
+      print('CirclePositionComponent');
+      circleDirectionX *= -1;
+      // circleDirectionY *= -1;
+    }
   }
 }

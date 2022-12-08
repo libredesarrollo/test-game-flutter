@@ -37,19 +37,23 @@ class Tiger extends SpriteComponent with KeyboardHandler {
     RawKeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+        keysPressed.contains(LogicalKeyboardKey.keyW)) {
       position = Vector2(centerX, centerY--);
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+        keysPressed.contains(LogicalKeyboardKey.keyS)) {
       position = Vector2(centerX, centerY++);
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD)) {
       position = Vector2(centerX++, centerY);
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA)) {
       position = Vector2(centerX--, centerY);
     }
 
