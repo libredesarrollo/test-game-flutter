@@ -11,25 +11,25 @@ import 'package:flutter/services.dart';
 
 class Tiger extends SpriteComponent with KeyboardHandler {
   late double screenWidth, screenHeight, centerX, centerY;
-  late double spriteSizeWidth = 680.0, SpriteSizeHeight = 472.0;
+  late double tigerSizeWidth = 512.0, tigerSizeHeight = 512.0;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
-    centerX = (screenWidth / 2) - (spriteSizeWidth / 2);
-    centerY = (screenHeight / 2) - (SpriteSizeHeight / 2);
+    centerX = (screenWidth / 2) - (tigerSizeWidth / 2);
+    centerY = (screenHeight / 2) - (tigerSizeHeight / 2);
 
-    var spriteImages = await Flame.images.load('dino.png');
+    // var spriteImages = await Flame.images.load('george.png');
 
-     final spriteSheet = SpriteSheet(
-         image: spriteImages, srcSize: Vector2(spriteSizeWidth, SpriteSizeHeight));
+    // final spriteSheet = SpriteSheet(
+    //     image: spriteImages, srcSize: Vector2(tigerSizeWidth, tigerSizeHeight));
 
-    sprite = spriteSheet.getSprite(3, 1);
+    // sprite = spriteSheet.getSprite(0, 2);
     position = Vector2(centerX, centerY);
-    size = Vector2(spriteSizeWidth, SpriteSizeHeight);
-    //sprite = await Sprite.load('Sprite.png');
+    size = Vector2(tigerSizeWidth, tigerSizeHeight);
+    sprite = await Sprite.load('tiger.png');
   }
 
   @override
