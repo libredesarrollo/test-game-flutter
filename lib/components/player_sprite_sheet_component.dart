@@ -33,13 +33,16 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent {
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
     //sprite = await Sprite.load('Sprite.png');
 
-    dinoAnimation =
-        spriteSheet.createAnimationByColumn(column: 0, stepTime: 1, to: 4);
+    // dinoAnimation =
+    //     spriteSheet.createAnimationByColumn(column: 0, stepTime: 1, to: 4);
+
+    // dinoAnimation = spriteSheet.createAnimationByLimit(
+    //     xInit: 1, yInit: 1, xEnd: 2, yEnd: 1, stepTime: .08);
+
+    dinoAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 0, yInit: 0, step: 10, sizeX: 2, stepTime: .08);
 
     animation = dinoAnimation;
-
-  
-
   }
 
   @override
@@ -58,22 +61,15 @@ extension CreateAnimationByColumn on SpriteSheet {
     int from = 0,
     int? to,
   }) {
-
     print(columns);
 
     to ??= columns;
-    final spriteList = List<int>.generate(to - from, (i) => from + i)
-        .map((e) {
-          print(e.toString()+" "+column.toString());
-        return getSprite(e, column);
-        })
-        .toList();
-
-
-
+    final spriteList = List<int>.generate(to - from, (i) => from + i).map((e) {
+      print(e.toString() + " " + column.toString());
+      return getSprite(e, column);
+    }).toList();
 
     //spriteList.add();
-
 
     return SpriteAnimation.spriteList(
       spriteList,
@@ -82,25 +78,47 @@ extension CreateAnimationByColumn on SpriteSheet {
     );
   }
 }
-// extension CreateAnimationByLimit on SpriteSheet {
-//   SpriteAnimation createAnimationByColumn({
-//     required int column,
-//     required double stepTime,
-//     bool loop = true,
-//     int from = 0,
-//     int? to,
-//   }) {
 
-//     print(columns);
+extension CreateAnimationByLimit on SpriteSheet {
+  SpriteAnimation createAnimationByLimit(
+      // {required int xInit,
+      // required int xEnd,
+      // required int yInit,
+      // required int yEnd,
+      {required int xInit,
+      required int yInit,
+      required int step,
+      required int sizeX,
+      required double stepTime,
+      bool loop = true}) {
+    final List<Sprite> spriteList = [];
 
-//     to ??= columns;
-//     final spriteList = List<int>.generate(to - from, (i) => from + i)
-//         .map((e) => getSprite(e, column))
-//         .toList();
-//     return SpriteAnimation.spriteList(
-//       spriteList,
-//       stepTime: stepTime,
-//       loop: loop,
-//     );
-//   }
-// }
+    var x = xInit;
+    var y = yInit - 1;
+    for (var i = 0; i < step; i++) {
+      if (y >= sizeX) {
+        // 2 ancho
+        y = 0;
+        x++;
+      } else {
+        y++;
+      }
+
+      print(x.toString() + " -- " + y.toString());
+      spriteList.add(getSprite(x, y));
+    }
+
+    // for (var i = xInit; i < xEnd; i++) {
+    //   for (var j = yInit; j < yEnd; j++) {
+    //     //print(i.toString() + " " + j.toString());
+    //     spriteList.add(getSprite(i, j));
+    //   }
+    // }
+
+    return SpriteAnimation.spriteList(
+      spriteList,
+      stepTime: stepTime,
+      loop: loop,
+    );
+  }
+}
