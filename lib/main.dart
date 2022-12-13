@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
+import 'package:testgame/components/player_sprite_sheet_component.dart';
 
 import 'components/player.dart';
 import 'package:testgame/components/background.dart';
@@ -30,7 +31,7 @@ class GoldRush extends FlameGame
 
     //  add(Player());
     //add(Background());
-    add(Tiger());
+    add(PlayeSpriteSheetComponent());
     // add(ScreenHitbox());
   }
 
