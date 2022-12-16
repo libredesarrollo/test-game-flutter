@@ -5,13 +5,48 @@ import 'package:flutter/material.dart';
 
 import 'dart:ui';
 
-class PlayeSpriteSheetComponent extends SpriteAnimationComponent {
+import 'package:flutter/services.dart';
+
+class PlayeSpriteSheetComponent extends SpriteAnimationComponent
+    with KeyboardHandler {
   late double screenWidth, screenHeight, centerX, centerY;
   final double spriteWidth = 512.0, spriteHeight = 512.0;
 
   late double spriteSheetWidth = 680.0, spriteSheetHeight = 472.0;
 
   late SpriteAnimation dinoAnimation;
+
+  @override
+  bool onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    flipHorizontally();
+
+    print('sss');
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+        keysPressed.contains(LogicalKeyboardKey.keyW)) {
+      position.y--;
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+        keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      position.y++;
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      position.x++;
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      position.x--;
+    }
+
+    return true;
+  }
 
   @override
   Future<void> onLoad() async {
@@ -30,7 +65,8 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent {
 
     //sprite = spriteSheet.getSprite(1, 1);
     position = Vector2(centerX, centerY);
-    size = Vector2(spriteSheetWidth, spriteSheetHeight);
+    size = Vector2(spriteSheetWidth / 3, spriteSheetHeight / 3);
+
     //sprite = await Sprite.load('Sprite.png');
 
     // dinoAnimation =
@@ -48,6 +84,8 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent {
   @override
   void update(double dt) {
     // position = Vector2(centerX++, centerY++);
+    //angle += dt * 2;
+    // flipVertically();
 
     super.update(dt);
   }

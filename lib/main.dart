@@ -24,7 +24,10 @@ void main() async {
 }
 
 class GoldRush extends FlameGame
-    with /*HasCollidables*/ HasCollisionDetection, TapDetector, KeyboardEvents {
+    with /*HasCollidables*/ HasCollisionDetection,
+        TapDetector,
+        KeyboardEvents,
+        HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -32,6 +35,7 @@ class GoldRush extends FlameGame
     //  add(Player());
     //add(Background());
     add(PlayeSpriteSheetComponent());
+
     // add(ScreenHitbox());
   }
 
@@ -47,24 +51,24 @@ class GoldRush extends FlameGame
     return true;
   }
 
-  @override
-  KeyEventResult onKeyEvent(
-    RawKeyEvent event,
-    Set<LogicalKeyboardKey> keysPressed,
-  ) {
-    final isKeyDown = event is RawKeyDownEvent;
+  // @override
+  // KeyEventResult onKeyEvent(
+  //   RawKeyEvent event,
+  //   Set<LogicalKeyboardKey> keysPressed,
+  // ) {
+  //   final isKeyDown = event is RawKeyDownEvent;
 
-    final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
-    print(keysPressed);
-    if (isSpace && isKeyDown) {
-      if (keysPressed.contains(LogicalKeyboardKey.altLeft) ||
-          keysPressed.contains(LogicalKeyboardKey.altRight)) {
-        print(keysPressed);
-      } else {
-        print('otro');
-      }
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
+  //   final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
+  //   print(keysPressed);
+  //   if (isSpace && isKeyDown) {
+  //     if (keysPressed.contains(LogicalKeyboardKey.altLeft) ||
+  //         keysPressed.contains(LogicalKeyboardKey.altRight)) {
+  //       print(keysPressed);
+  //     } else {
+  //       print('otro');
+  //     }
+  //     return KeyEventResult.handled;
+  //   }
+  //   return KeyEventResult.ignored;
+  // }
 }
