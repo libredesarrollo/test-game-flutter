@@ -15,6 +15,9 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent
 
   late double spriteSheetWidth = 680.0, spriteSheetHeight = 472.0;
 
+  int playerSpeed = 500;
+  double posX = 0, posY = 0;
+
   // late SpriteAnimation dinoAnimation;
 
   late SpriteAnimation dinoIdleAnimation,
@@ -34,36 +37,61 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent
       animation = dinoIdleAnimation;
     }
 
-    print('aaa');
+    if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD)) &&
+        keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+      // position.y--;
+      playerSpeed = 1500;
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
-        keysPressed.contains(LogicalKeyboardKey.keyW)) {
-      position.y--;
-    }
+      posX++;
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
-        keysPressed.contains(LogicalKeyboardKey.keyS)) {
-      position.y++;
-    }
-
-    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+      if (!right) flipHorizontally();
+      right = true;
+      //animation = dinoRunAnimation;
+      posX++;
+    } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
-      position.x += 5;
-      // print(position.x);
+      playerSpeed = 500;
+
+      posX++;
+
       if (!right) flipHorizontally();
       right = true;
       animation = dinoWalkAnimation;
     }
 
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+        keysPressed.contains(LogicalKeyboardKey.keyW)) {
+      // position.y--;
+
+      posY--;
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+        keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      // position.y++;
+      posY++;
+    }
+
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
-      position.x -= 5;
+      // position.x -= 5;
+      posX--;
       if (right) flipHorizontally();
       right = false;
       animation = dinoWalkAnimation;
     }
 
     return true;
+  }
+
+  @override
+  void update(double dt) {
+    position.x += playerSpeed * dt * posX;
+    position.y += playerSpeed * dt * posY;
+    posX = 0;
+    posY = 0;
+    super.update(dt);
   }
 
   @override
@@ -128,14 +156,6 @@ class PlayeSpriteSheetComponent extends SpriteAnimationComponent
   //   super.render(canvas);
   // }
 
-  @override
-  void update(double dt) {
-    // position = Vector2(centerX++, centerY++);
-    //angle += dt * 3;
-    // flipVertically();
-
-    super.update(dt);
-  }
 }
 
 extension CreateAnimationByColumn on SpriteSheet {
@@ -146,11 +166,9 @@ extension CreateAnimationByColumn on SpriteSheet {
     int from = 0,
     int? to,
   }) {
-    print(columns);
-
     to ??= columns;
     final spriteList = List<int>.generate(to - from, (i) => from + i).map((e) {
-      print(e.toString() + " " + column.toString());
+      // print(e.toString() + " " + column.toString());
       return getSprite(e, column);
     }).toList();
 
@@ -189,7 +207,7 @@ extension CreateAnimationByLimit on SpriteSheet {
         y++;
       }
 
-      print(x.toString() + " -- " + y.toString());
+      // print(x.toString() + " -- " + y.toString());
       spriteList.add(getSprite(x, y));
     }
 
