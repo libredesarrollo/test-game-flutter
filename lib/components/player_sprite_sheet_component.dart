@@ -69,7 +69,7 @@ class PlayerSpriteSheetComponent extends SpriteAnimationComponent
 
     position = Vector2(centerX, centerY);
 
-    //addHitbox(HitboxRectangle());
+    add(RectangleHitbox());
     // add(RectangleHitbox.relative(
     //     Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4),
     //     relation: Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4),
@@ -81,13 +81,14 @@ class PlayerSpriteSheetComponent extends SpriteAnimationComponent
     //     parentSize: Vector2(1,
     //         1))); //.relative(Vector2(spriteSheetWidth,spriteSheetHeight), parentSize: Vector2(1, 1)
 
-    // add(RectangleHitbox(
-    //     size: Vector2(spriteSheetWidth / 4 - 60, spriteSheetHeight / 4),
-    //      position: Vector2(30, 0)
-    //     ));
+    add(RectangleHitbox(
+        size: Vector2(spriteSheetWidth / 4 - 60, spriteSheetHeight / 4),
+        position: Vector2(30, 0)));
 
     return super.onLoad();
   }
+
+  
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {

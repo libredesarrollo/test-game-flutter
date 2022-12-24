@@ -13,18 +13,31 @@ class MyGame extends FlameGame
         /*TapDetector */ HasTappables,
         HasKeyboardHandlerComponents,
         HasCollisionDetection {
+  double elapsedTime = 0.0;
+
   @override
   Future<void>? onLoad() {
     // add(PlayerImageSpriteComponent());
     //add(PlayerSpriteSheetComponent());
 
-    //add(PlayerSpriteSheetComponent());
+    add(PlayerSpriteSheetComponent());
 
-    add(CirclePositionComponent(countActive: true));
-    add(CirclePositionComponent());
+    // add(CirclePositionComponent(countActive: true));
+    // add(CirclePositionComponent());
     add(ScreenHitbox());
 
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    elapsedTime += dt;
+    if (elapsedTime > 3.0) {
+      add(CirclePositionComponent());
+      elapsedTime = 0.0;
+    }
+
+    super.update(dt);
   }
 }
 
