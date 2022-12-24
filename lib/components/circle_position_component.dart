@@ -8,18 +8,29 @@ import 'dart:math';
 
 class CirclePositionComponent extends PositionComponent
     with CollisionCallbacks {
+  CirclePositionComponent({this.countActive = false});
+
+  bool countActive;
+  int count = 0;
+
   static const int circleSpeed = 250;
   static const circleWidth = 100.0, circleHeight = 100.0;
 
   int circleDirectionX = 1;
   int circleDirectionY = 1;
+
   late double screenWidth, screenHeight, centerX, centerY;
 
   final ShapeHitbox hitbox = CircleHitbox();
 
+  Random random = Random();
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    circleDirectionX = random.nextInt(2) == 1 ? 1 : -1;
+    circleDirectionY = random.nextInt(2) == 1 ? 1 : -1;
 
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
@@ -28,13 +39,14 @@ class CirclePositionComponent extends PositionComponent
     centerY = (screenHeight / 2) - (circleHeight / 2);
 
     // position = Vector2(centerX, centerY);
-    Random random = Random();
-    position = Vector2(random.nextDouble() * 300, random.nextDouble() * 300);
+
+    position = Vector2(random.nextDouble() * 500, random.nextDouble() * 500);
     size = Vector2(circleWidth, circleHeight);
     // hitbox.paint.color = BasicPalette.green.color;
     hitbox.paint.color = ColorExtension.random();
 
     hitbox.renderShape = true;
+    // hitbox.debugMode=true;
     add(hitbox);
   }
 
@@ -54,35 +66,36 @@ class CirclePositionComponent extends PositionComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    // print(points.first[1]);
-
     if (other is ScreenHitbox) {
-      if (circleDirectionX == 1) {
-        // print('hit!');
-        circleDirectionX = -1;
-        circleDirectionY = 1 * -1;
+      if (points.first[1] <= 0.0) {
+        // top
+        circleDirectionX = random.nextInt(2) == 1 ? 1 : -1;
+        circleDirectionY *= -1;
+      } else if (points.first[0] <= 0.0) {
+        // left
+        circleDirectionX *= -1;
+        circleDirectionY = random.nextInt(2) == 1 ? 1 : -1;
       } else {
-        // print('hit!');
-        circleDirectionX = 1;
-        circleDirectionY = 1 * -1;
+        if (points.first[0] >= MediaQueryData.fromWindow(window).size.width) {
+          // right
+          circleDirectionX *= -1;
+          circleDirectionY = random.nextInt(2) == 1 ? 1 : -1;
+        } else {
+          // (default) bottom
+          circleDirectionX = random.nextInt(2) == 1 ? 1 : -1;
+          circleDirectionY *= -1;
+        }
       }
     }
 
-    if (points.first[1] == 0.0) {
-      // top
-      circleDirectionY = 1;
-      circleDirectionX *= -1; // invertimos la direccion en el X
-    }
-    if (points.first[0] == 0.0) {
-      // left
-      circleDirectionX = 1;
-      circleDirectionY *= -1; // invertimos la direccion en el X
+    if (other is CirclePositionComponent) {
+      circleDirectionX *= -1;
+      circleDirectionY *= -1;
     }
 
-    if (other is CirclePositionComponent) {
-      print('CirclePositionComponent');
-      circleDirectionX *= -1;
-      // circleDirectionY *= -1;
+    if (this.countActive) {
+      count++;
+      print(count);
     }
   }
 }

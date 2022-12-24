@@ -34,7 +34,7 @@ class GoldRush extends FlameGame
 
     //  add(Player());
     //add(Background());
-    add(PlayeSpriteSheetComponent());
+    add(PlayerSpriteSheetComponent());
     // add(ScreenHitbox());
   }
 
