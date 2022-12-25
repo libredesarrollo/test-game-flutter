@@ -4,11 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
-import 'package:testgame/components/player_sprite_sheet_component.dart';
-
-import 'components/player.dart';
-import 'package:testgame/components/background.dart';
-import 'package:testgame/components/tiger.dart';
+import 'package:testgame/components/test/player_sprite_sheet_component.dart';
 
 void main() async {
   // Create an instance of the game

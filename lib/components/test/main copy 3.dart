@@ -4,11 +4,8 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:testgame/components/test/circle_position_component%20copy.dart';
 // import 'package:testgame/components/background.dart';
-import 'package:testgame/components/circle_position_component.dart';
-
-import 'package:testgame/components/tiger.dart';
-import 'components/player.dart';
 
 void main() async {
   // Create an instance of the game

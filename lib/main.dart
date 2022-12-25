@@ -3,9 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:testgame/components/circle_position_component.dart';
-
-import 'package:testgame/components/player_sprite_sheet_component.dart';
+import 'package:testgame/components/meteor_component.dart';
 
 class MyGame extends FlameGame
     with
@@ -17,13 +15,6 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    // add(PlayerImageSpriteComponent());
-    //add(PlayerSpriteSheetComponent());
-
-    add(PlayerSpriteSheetComponent());
-
-    // add(CirclePositionComponent(countActive: true));
-    // add(CirclePositionComponent());
     add(ScreenHitbox());
 
     return super.onLoad();
@@ -32,8 +23,8 @@ class MyGame extends FlameGame
   @override
   void update(double dt) {
     elapsedTime += dt;
-    if (elapsedTime > 3.0) {
-      add(CirclePositionComponent());
+    if (elapsedTime > 1.0) {
+      add(MeteorComponent());
       elapsedTime = 0.0;
     }
 
