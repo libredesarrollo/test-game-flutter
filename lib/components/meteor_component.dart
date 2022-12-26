@@ -29,6 +29,8 @@ class MeteorComponent extends PositionComponent with CollisionCallbacks {
   Future<void> onLoad() async {
     super.onLoad();
 
+    debugMode = true;
+
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
 
@@ -58,6 +60,7 @@ class MeteorComponent extends PositionComponent with CollisionCallbacks {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
+    print('hit');
     // if (other is ScreenHitbox) {
     //   if (points.first[1] <= 0.0) {
     //     // top

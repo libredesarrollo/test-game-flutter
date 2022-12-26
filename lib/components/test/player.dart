@@ -36,7 +36,7 @@ class Player extends PositionComponent
     centerY = (screenHeight / 2) - (squareHeight / 2);
 
     // Set the initial position of the green square at the center of the screen with a size of 100 width and height
-    position = Vector2(centerX, centerY);
+    position = Vector2(500, centerY);
     size = Vector2(squareWidth, squareHeight);
 
     baseColor = ColorExtension.random(withAlpha: 0.8, base: 100);

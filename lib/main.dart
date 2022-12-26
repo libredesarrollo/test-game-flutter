@@ -4,6 +4,7 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:testgame/components/meteor_component.dart';
+import 'package:testgame/components/player_component.dart';
 
 class MyGame extends FlameGame
     with
@@ -15,7 +16,8 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    add(ScreenHitbox());
+    //add(ScreenHitbox());
+    add(PlayerComponent());
 
     return super.onLoad();
   }
