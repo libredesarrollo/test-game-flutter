@@ -17,9 +17,6 @@ class PlayerComponent extends SpriteAnimationComponent
   int posX = 0, posY = 0;
   double playerSpeed = 500;
 
-  double gravity = 1.8;
-  Vector2 velocity = Vector2(0, 0);
-
   int animationIndex = 0;
 
   bool right = true, collisionXLeft = false, collisionXRight = false;
@@ -73,8 +70,7 @@ class PlayerComponent extends SpriteAnimationComponent
 
     debugMode = true;
 
-    position = Vector2(centerX, 0);
-    // position = Vector2(centerX, screenHeight - (spriteSheetHeight / 8) - 20);
+    position = Vector2(centerX, screenHeight - (spriteSheetHeight / 8) - 20);
 
     add(RectangleHitbox(
         size: Vector2(spriteSheetWidth / 4 - 60, spriteSheetHeight / 4),
@@ -85,7 +81,7 @@ class PlayerComponent extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    // print(other);
+  // print(other);
 
     print(collisionXLeft);
 
@@ -198,14 +194,6 @@ class PlayerComponent extends SpriteAnimationComponent
     position.y += playerSpeed * dt * posY;
     posX = 0;
     posY = 0;
-
-    //velocity.y = velocity.y * dt;
-
-    if (position.y < 900 - size[1]) {
-      velocity.y += gravity;
-
-      position.y += velocity.y * dt;
-    }
 
     super.update(dt);
   }

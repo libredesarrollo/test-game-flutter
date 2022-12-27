@@ -19,6 +19,8 @@ class MyGame extends FlameGame
     add(ScreenHitbox());
     add(PlayerComponent());
 
+    print('main' + size.x.toString());
+
     return super.onLoad();
   }
 
