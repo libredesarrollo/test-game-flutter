@@ -60,7 +60,7 @@ class MeteorComponent extends PositionComponent with CollisionCallbacks {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    print('hit');
+   // print('hit');
     // if (other is ScreenHitbox) {
     //   if (points.first[1] <= 0.0) {
     //     // top

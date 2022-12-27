@@ -16,7 +16,7 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    //add(ScreenHitbox());
+    add(ScreenHitbox());
     add(PlayerComponent());
 
     return super.onLoad();

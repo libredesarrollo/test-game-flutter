@@ -19,12 +19,13 @@ class PlayerComponent extends SpriteAnimationComponent
 
   int animationIndex = 0;
 
-  bool right = true;
+  bool right = true, collisionXLeft = false, collisionXRight = false;
 
   late SpriteAnimation dinoDeadAnimation,
       dinoIdleAnimation,
       dinoJumpAnimation,
       dinoRunAnimation,
+      dinoRunSlowAnimation,
       dinoWalkAnimation;
 
   @override
@@ -49,6 +50,8 @@ class PlayerComponent extends SpriteAnimationComponent
         xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08);
     dinoRunAnimation = spriteSheet.createAnimationByLimit(
         xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
+    dinoRunSlowAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .32);
     dinoWalkAnimation = spriteSheet.createAnimationByLimit(
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     // end animation
@@ -69,18 +72,6 @@ class PlayerComponent extends SpriteAnimationComponent
 
     position = Vector2(centerX, screenHeight - (spriteSheetHeight / 8) - 20);
 
-    // add(RectangleHitbox());
-    // add(RectangleHitbox.relative(
-    //     Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4),
-    //     relation: Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4),
-    //     //position: Vector2(100, 100),
-    //     anchor: Anchor.bottomCenter,
-
-    //     //angle: 50.0,
-
-    //     parentSize: Vector2(1,
-    //         1))); //.relative(Vector2(spriteSheetWidth,spriteSheetHeight), parentSize: Vector2(1, 1)
-
     add(RectangleHitbox(
         size: Vector2(spriteSheetWidth / 4 - 60, spriteSheetHeight / 4),
         position: Vector2(30, 0)));
@@ -90,47 +81,33 @@ class PlayerComponent extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    print(other);
+  // print(other);
+
+    print(collisionXLeft);
+
+    if (other is ScreenHitbox) {
+      if (points.first[0] <= 0.0) {
+        // left
+        animation = dinoRunSlowAnimation;
+        collisionXLeft = true;
+      }
+      if (points.first[0] >= MediaQueryData.fromWindow(window).size.width) {
+        // right
+        animation = dinoRunSlowAnimation;
+        collisionXRight = true;
+      }
+    }
 
     super.onCollision(points, other);
   }
 
   @override
-  bool onTapDown(TapDownInfo info) {
-    // animationIndex++;
-    // if (animationIndex > 4) {
-    //   animationIndex = 0;
-    // }
-
-    // switch (animationIndex) {
-    //   case 1:
-    //     animation = dinoIdleAnimation;
-    //     break;
-    //   case 2:
-    //     animation = dinoJumpAnimation;
-    //     break;
-    //   case 3:
-    //     animation = dinoRunAnimation;
-    //     break;
-    //   case 4:
-    //     animation = dinoWalkAnimation;
-    //     break;
-    //   case 0:
-    //   default:
-    //     animation = dinoDeadAnimation;
-    // }
-
-    super.onTapDown(info);
-
-    return true;
+  void onCollisionEnd(PositionComponent other) {
+    if (other is ScreenHitbox) {
+      print('end');
+      collisionXLeft = collisionXRight = false;
+    }
   }
-
-  // @override
-  // bool onTapUp(TapUpInfo info) {
-  //   print(info);
-  //   super.onTapUp(info);
-  //   return true;
-  // }
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -145,47 +122,52 @@ class PlayerComponent extends SpriteAnimationComponent
     if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
             keysPressed.contains(LogicalKeyboardKey.keyD)) &&
         keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-      animation = dinoRunAnimation;
-
       playerSpeed = 1500;
 
       if (!right) flipHorizontally();
       right = true;
       // position.x += 5;
-      posX++;
+      if (!collisionXRight) {
+        animation = dinoRunAnimation;
+        posX++;
+      }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
-      animation = dinoWalkAnimation;
       playerSpeed = 500;
       if (!right) flipHorizontally();
       right = true;
       // position.x += 5;
-      posX++;
+      if (!collisionXRight) {
+        posX++;
+        animation = dinoWalkAnimation;
+      }
     }
 
     if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
             keysPressed.contains(LogicalKeyboardKey.keyA)) &&
         keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-      animation = dinoRunAnimation;
-
       playerSpeed = 1500;
 
       if (right) flipHorizontally();
       right = false;
 
       //position.x -= 5;
-      posX--;
+      if (!collisionXLeft) {
+        animation = dinoRunAnimation;
+        posX--;
+      }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
-      animation = dinoWalkAnimation;
-
       playerSpeed = 500;
 
       if (right) flipHorizontally();
       right = false;
 
       //position.x -= 5;
-      posX--;
+      if (!collisionXLeft) {
+        animation = dinoWalkAnimation;
+        posX--;
+      }
     }
 
     //***Y */
