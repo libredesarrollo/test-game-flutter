@@ -14,6 +14,11 @@ class MyGame extends FlameGame
         HasCollisionDetection {
   double elapsedTime = 0.0;
 
+  // @override
+  // Color backgroundColor() {
+  //   return Colors.red;
+  // }
+
   @override
   Future<void>? onLoad() {
     add(ScreenHitbox());

@@ -84,6 +84,11 @@ class PlayerComponent extends SpriteAnimationComponent
   }
 
   @override
+  Color backgroundColor() {
+    return Colors.purple;
+  }
+
+  @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
     // print(other);
 
