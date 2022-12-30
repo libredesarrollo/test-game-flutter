@@ -97,12 +97,10 @@ class PlayerComponent extends SpriteAnimationComponent
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
-        animation = dinoRunSlowAnimation;
         collisionXLeft = true;
       }
       if (points.first[0] >= MediaQueryData.fromWindow(window).size.width) {
         // right
-        animation = dinoRunSlowAnimation;
         collisionXRight = true;
       }
     }
@@ -139,6 +137,8 @@ class PlayerComponent extends SpriteAnimationComponent
       if (!collisionXRight) {
         animation = dinoRunAnimation;
         posX++;
+      }else{
+        animation = dinoRunSlowAnimation;
       }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
@@ -149,6 +149,8 @@ class PlayerComponent extends SpriteAnimationComponent
       if (!collisionXRight) {
         posX++;
         animation = dinoWalkAnimation;
+      }else{
+        animation = dinoRunSlowAnimation;
       }
     }
 
@@ -164,6 +166,8 @@ class PlayerComponent extends SpriteAnimationComponent
       if (!collisionXLeft) {
         animation = dinoRunAnimation;
         posX--;
+      }else{
+        animation = dinoRunSlowAnimation;
       }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
@@ -176,6 +180,8 @@ class PlayerComponent extends SpriteAnimationComponent
       if (!collisionXLeft) {
         animation = dinoWalkAnimation;
         posX--;
+      }else{
+        animation = dinoRunSlowAnimation;
       }
     }
 
