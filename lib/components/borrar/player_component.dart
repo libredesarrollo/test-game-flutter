@@ -11,35 +11,36 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 class PlayerComponent extends SpriteAnimationComponent
-    with KeyboardHandler, CollisionCallbacks {
-  double gravity = 5;
-  Vector2 velocity = Vector2(0, 0);
-
+    with Tappable, KeyboardHandler, CollisionCallbacks {
   late double screenWidth, screenHeight, centerX, centerY;
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
   int posX = 0, posY = 0;
-
   double playerSpeed = 500;
+
   final double jumpForce = 130;
+
+  double gravity = 5.8;
+  Vector2 velocity = Vector2(0, 0);
 
   int animationIndex = 0;
 
   bool right = true,
-      collisionXRight = false,
       collisionXLeft = false,
+      collisionXRight = false,
       inGround = false;
 
   late SpriteAnimation dinoDeadAnimation,
       dinoIdleAnimation,
       dinoJumpAnimation,
       dinoRunAnimation,
-      dinoWalkAnimation,
-      dinoWalkSlowAnimation;
+      dinoRunSlowAnimation,
+      dinoWalkAnimation;
 
   @override
   Future<void>? onLoad() async {
+    //sprite = await Sprite.load('tiger.png');
+
     anchor = Anchor.center;
-    debugMode = true;
 
     final spriteImage = await Flame.images.load('dinofull.png');
     final spriteSheet = SpriteSheet(
@@ -54,16 +55,18 @@ class PlayerComponent extends SpriteAnimationComponent
     dinoIdleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     dinoJumpAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08);
+        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08, loop: true);
     dinoRunAnimation = spriteSheet.createAnimationByLimit(
         xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
+    dinoRunSlowAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .32);
     dinoWalkAnimation = spriteSheet.createAnimationByLimit(
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
-    dinoWalkSlowAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
     animation = dinoIdleAnimation;
+
+    //animation = spriteSheet.createAnimationByLimit(xInit: 0, yInit: 0, step: 7, sizeX: 2, stepTime: .08);
 
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
@@ -73,13 +76,49 @@ class PlayerComponent extends SpriteAnimationComponent
     centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
     centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
 
-    position = Vector2(centerX, centerY);
+    debugMode = true;
+
+    position = Vector2(centerX, 0);
+    // position = Vector2(centerX, screenHeight - (spriteSheetHeight / 8) - 20);
 
     add(RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
-        position: Vector2(25, 0)));
+        size: Vector2(spriteSheetWidth / 4 - 60, spriteSheetHeight / 4),
+        position: Vector2(30, 0)));
 
     return super.onLoad();
+  }
+
+  @override
+  Color backgroundColor() {
+    return Colors.purple;
+  }
+
+  @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    // print(other);
+
+    print(collisionXLeft);
+
+    if (other is ScreenHitbox) {
+      if (points.first[0] <= 0.0) {
+        // left
+        collisionXLeft = true;
+      }
+      if (points.first[0] >= MediaQueryData.fromWindow(window).size.width) {
+        // right
+        collisionXRight = true;
+      }
+    }
+
+    super.onCollision(points, other);
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    if (other is ScreenHitbox) {
+      print('end');
+      collisionXLeft = collisionXRight = false;
+    }
   }
 
   @override
@@ -87,6 +126,8 @@ class PlayerComponent extends SpriteAnimationComponent
     if (keysPressed.isEmpty) {
       animation = dinoIdleAnimation;
     }
+
+    // print(keysPressed);
 
     //***X */
     // correr
@@ -97,24 +138,24 @@ class PlayerComponent extends SpriteAnimationComponent
 
       if (!right) flipHorizontally();
       right = true;
-
+      // position.x += 5;
       if (!collisionXRight) {
         animation = dinoRunAnimation;
         posX++;
       } else {
-        animation = dinoWalkSlowAnimation;
+        animation = dinoRunSlowAnimation;
       }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
       playerSpeed = 500;
       if (!right) flipHorizontally();
       right = true;
-
+      // position.x += 5;
       if (!collisionXRight) {
-        animation = dinoWalkAnimation;
         posX++;
+        animation = dinoWalkAnimation;
       } else {
-        animation = dinoWalkSlowAnimation;
+        animation = dinoRunSlowAnimation;
       }
     }
 
@@ -126,11 +167,12 @@ class PlayerComponent extends SpriteAnimationComponent
       if (right) flipHorizontally();
       right = false;
 
+      //position.x -= 5;
       if (!collisionXLeft) {
         animation = dinoRunAnimation;
         posX--;
       } else {
-        animation = dinoWalkSlowAnimation;
+        animation = dinoRunSlowAnimation;
       }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
@@ -139,11 +181,12 @@ class PlayerComponent extends SpriteAnimationComponent
       if (right) flipHorizontally();
       right = false;
 
+      //position.x -= 5;
       if (!collisionXLeft) {
         animation = dinoWalkAnimation;
         posX--;
       } else {
-        animation = dinoWalkSlowAnimation;
+        animation = dinoRunSlowAnimation;
       }
     }
 
@@ -153,13 +196,17 @@ class PlayerComponent extends SpriteAnimationComponent
         !inGround) {
       animation = dinoJumpAnimation;
       velocity.y = -jumpForce;
-      position.y -= 15;
+      posY -= 10;
+      print('jump');
+      //position.y -= 5;
+      //posY--;
     }
     // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
     //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
     //   animation = dinoWalkAnimation;
+    //   //position.y ++= 5;
 
-    //   posY++;
+    //   print(posY);
     // }
 
     return true;
@@ -172,39 +219,20 @@ class PlayerComponent extends SpriteAnimationComponent
     posX = 0;
     posY = 0;
 
+    //velocity.y = velocity.y * dt;
+
     if (position.y < 900 - size[1]) {
       velocity.y += gravity;
+
       inGround = true;
     } else {
-      velocity = Vector2.all(0);
       inGround = false;
     }
 
+    // position.y += velocity.y * dt;
     position += velocity * dt;
 
     super.update(dt);
-  }
-
-  @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is ScreenHitbox) {
-      if (points.first[0] <= 0.0) {
-        // left
-        collisionXLeft = true;
-      } else if (points.first[0] >=
-          MediaQueryData.fromWindow(window).size.height) {
-        // left
-        collisionXRight = true;
-      }
-    }
-
-    super.onCollision(points, other);
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    collisionXLeft = collisionXRight = false;
-    super.onCollisionEnd(other);
   }
 }
 

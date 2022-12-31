@@ -34,6 +34,11 @@ class MyGame extends FlameGame
 
     super.update(dt);
   }
+
+  @override
+  Color backgroundColor() {
+    return Colors.purple;
+  }
 }
 
 void main(List<String> args) {
