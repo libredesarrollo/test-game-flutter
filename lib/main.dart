@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/components/player_component.dart';
+import 'package:testgame/components/background.dart';
 
 class MyGame extends FlameGame
     with
@@ -16,6 +17,7 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
+    add(Background());
     add(ScreenHitbox());
     add(PlayerComponent());
 
@@ -35,10 +37,10 @@ class MyGame extends FlameGame
     super.update(dt);
   }
 
-  @override
-  Color backgroundColor() {
-    return Colors.purple;
-  }
+  // @override
+  // Color backgroundColor() {
+  //   return Colors.purple;
+  // }
 }
 
 void main(List<String> args) {
