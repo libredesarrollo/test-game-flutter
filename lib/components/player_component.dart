@@ -12,6 +12,8 @@ import 'package:flutter/services.dart';
 
 class PlayerComponent extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
+  PlayerComponent();
+
   double gravity = 5;
   Vector2 velocity = Vector2(0, 0);
 
@@ -187,15 +189,15 @@ class PlayerComponent extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is ScreenHitbox) {
-      if (points.first[0] <= 0.0) {
-        // left
-        collisionXLeft = true;
-      } else if (points.first[0] >=
-          MediaQueryData.fromWindow(window).size.height) {
-        // left
-        collisionXRight = true;
-      }
+    //if (other is ScreenHitbox) {
+    if (points.first[0] <= 0.0) {
+      // left
+      collisionXLeft = true;
+    } else if (points.first[0] >= 4000) {
+      //MediaQueryData.fromWindow(window).size.height
+      // left
+      collisionXRight = true;
+      //}
     }
 
     super.onCollision(points, other);
