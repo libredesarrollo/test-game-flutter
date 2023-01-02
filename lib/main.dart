@@ -17,24 +17,24 @@ class MyGame extends FlameGame
         HasCollisionDetection {
   double elapsedTime = 0.0;
 
-  var bg = Background();
-
   @override
   Future<void>? onLoad() {
-    add(Background());
-
     var player = PlayerComponent();
+    var background = Background();
 
     add(ScreenHitbox());
-    add(bg);
+    add(background);
     add(player);
-    print(bg.loaded);
-    print(bg.isLoaded);
+    print(background.loaded);
+    print(background.isLoaded);
 
-    bg.loaded.then((value) {
-      print('*****' + bg.size.x.toString());
+    print(background.size.x.toString());
+
+    background.loaded.then((value) {
+      print('*****' + background.size.x.toString());
       camera.followComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, bg.size.x, bg.size.y));
+          worldBounds:
+              Rect.fromLTRB(0, 0, background.size.x, background.size.y));
       print('cargado');
     });
 
