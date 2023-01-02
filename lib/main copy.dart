@@ -1,10 +1,8 @@
 import 'package:flame/collisions.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:testgame/components/background.dart';
 import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/components/player_component.dart';
 import 'package:testgame/components/background.dart';
@@ -17,26 +15,13 @@ class MyGame extends FlameGame
         HasCollisionDetection {
   double elapsedTime = 0.0;
 
-  var bg = Background();
-
   @override
   Future<void>? onLoad() {
     add(Background());
-
-    var player = PlayerComponent();
-
     add(ScreenHitbox());
-    add(bg);
-    add(player);
-    print(bg.loaded);
-    print(bg.isLoaded);
+    add(PlayerComponent());
 
-    bg.loaded.then((value) {
-      print('*****' + bg.size.x.toString());
-      camera.followComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, bg.size.x, bg.size.y));
-      print('cargado');
-    });
+    print('main' + size.x.toString());
 
     return super.onLoad();
   }
@@ -58,10 +43,6 @@ class MyGame extends FlameGame
   // }
 }
 
-void main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Flame.device.fullScreen();
-  await Flame.device.setPortrait();
-
+void main(List<String> args) {
   runApp(GameWidget(game: MyGame()));
 }

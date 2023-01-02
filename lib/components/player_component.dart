@@ -12,10 +12,12 @@ import 'package:flutter/services.dart';
 
 class PlayerComponent extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
+  PlayerComponent();
+
   double gravity = 5;
   Vector2 velocity = Vector2(0, 0);
 
-  late double screenWidth, screenHeight, centerX, centerY;
+  late double screenWidth, screenHeight;
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
   int posX = 0, posY = 0;
 
@@ -70,14 +72,13 @@ class PlayerComponent extends SpriteAnimationComponent
 
     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
 
-    centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
-    centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
+    // centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
+    // centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
 
-    position = Vector2(centerX, centerY);
+    position = Vector2(size[0], -size[1]);
 
     add(RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
-        position: Vector2(25, 0)));
+        size: Vector2(size[0] - 70, size[1]), position: Vector2(30, 0)));
 
     return super.onLoad();
   }
@@ -172,7 +173,7 @@ class PlayerComponent extends SpriteAnimationComponent
     posX = 0;
     posY = 0;
 
-    if (position.y < 900 - size[1]) {
+    if (position.y < screenHeight - size[1]) {
       velocity.y += gravity;
       inGround = true;
     } else {
@@ -187,15 +188,15 @@ class PlayerComponent extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is ScreenHitbox) {
-      if (points.first[0] <= 0.0) {
-        // left
-        collisionXLeft = true;
-      } else if (points.first[0] >=
-          MediaQueryData.fromWindow(window).size.height) {
-        // left
-        collisionXRight = true;
-      }
+    //if (other is ScreenHitbox) {
+    if (points.first[0] <= 0.0) {
+      // left
+      collisionXLeft = true;
+    } else if (points.first[0] >= 4000) {
+      //MediaQueryData.fromWindow(window).size.height
+      // left
+      collisionXRight = true;
+      //}
     }
 
     super.onCollision(points, other);
