@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:testgame/components/background.dart';
 import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/components/player_component.dart';
+import 'package:testgame/components/tile_map_component.dart';
 
 class MyGame extends FlameGame
     with
@@ -21,21 +22,22 @@ class MyGame extends FlameGame
     var background = Background();
 
     add(ScreenHitbox());
-    add(background);
+    add(TileMapComponent());
+    //add(background);
     add(player);
-    print(background.loaded);
-    print(background.isLoaded);
+    // print(background.loaded);
+    // print(background.isLoaded);
 
-    print(background.size.x.toString());
+    // print(background.size.x.toString());
 
-    background.loaded.then((value) {
-      print('*****' + background.size.x.toString());
-      camera.followComponent(player,
-          worldBounds:
-              Rect.fromLTRB(0, 0, background.size.x, background.size.y));
-      print('cargado');
-    });
-
+    // background.loaded.then((value) {
+    //   print('*****' + background.size.x.toString());
+    //   camera.followComponent(player,
+    //       worldBounds:
+    //           Rect.fromLTRB(0, 0, background.size.x, background.size.y));
+    //   print('cargado');
+    // });
+    // var p = ObjectGroup;
     return super.onLoad();
   }
 

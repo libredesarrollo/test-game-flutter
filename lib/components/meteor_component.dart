@@ -31,7 +31,6 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
     position = Vector2(random.nextDouble() * screenWidth, -circleHeight);
     size = Vector2(circleWidth, circleHeight);
 
-
     final spriteImage = await Flame.images.load('meteor.png');
     final spriteSheet = SpriteSheet(
         image: spriteImage,

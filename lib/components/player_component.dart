@@ -61,7 +61,6 @@ class PlayerComponent extends Character {
     add(RectangleHitbox(
         size: Vector2(size[0] - 70, size[1]), position: Vector2(30, 0)));
 
-
     return super.onLoad();
   }
 
@@ -187,9 +186,9 @@ class PlayerComponent extends Character {
 
       other.hitbox.removeFromParent();
       other.removeFromParent();
-
-
     }
+
+    print(other);
 
     super.onCollision(points, other);
   }
