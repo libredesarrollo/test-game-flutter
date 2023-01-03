@@ -22,7 +22,7 @@ class PlayerComponent extends Character {
     anchor = Anchor.center;
     debugMode = true;
 
-    int count = -1;
+    int count = 0;
 
     final spriteImage = await Flame.images.load('dinofull.png');
     final spriteSheet = SpriteSheet(
