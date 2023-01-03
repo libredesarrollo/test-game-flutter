@@ -3,11 +3,9 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:testgame/components/background.dart';
 import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/components/player_component.dart';
-import 'package:testgame/components/background.dart';
 
 class MyGame extends FlameGame
     with
@@ -45,7 +43,7 @@ class MyGame extends FlameGame
   void update(double dt) {
     elapsedTime += dt;
     if (elapsedTime > 1.0) {
-      //add(MeteorComponent());
+      add(MeteorComponent());
       elapsedTime = 0.0;
     }
 

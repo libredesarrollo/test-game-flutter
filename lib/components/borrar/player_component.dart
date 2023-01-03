@@ -266,3 +266,19 @@ extension CreateAnimationByLimit on SpriteSheet {
         stepTime: stepTime, loop: loop);
   }
 }
+
+
+/*
+
+Es importante notar que, sacamos del condicional el cálculo de desplazamiento del player:
+
+position.y += velocity.y * dt;
+
+Que junto con la inicialización en cero del vector de velocidad:
+
+velocity = Vector2.all(0);
+
+Solamente es aplicado una fuerza distinta a cero, cuando el jugador no está en el piso.
+
+
+ */
