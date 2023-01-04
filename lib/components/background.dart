@@ -16,7 +16,7 @@ class Background extends SpriteComponent {
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
 
-    size = Vector2(screenWidth, screenHeight);
-    //size = sprite!.originalSize;
+    //size = Vector2(screenWidth, screenHeight);
+    size = sprite!.originalSize;
   }
 }

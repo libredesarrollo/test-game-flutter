@@ -19,7 +19,7 @@ class MyGame extends FlameGame
   Future<void>? onLoad() {
     add(Background());
     add(ScreenHitbox());
-    add(PlayerComponent());
+    // add(PlayerComponent());
 
     print('main' + size.x.toString());
 

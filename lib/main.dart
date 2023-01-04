@@ -18,34 +18,36 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    var player = PlayerComponent();
     var background = Background();
-
+    add(background);
     add(ScreenHitbox());
-    add(TileMapComponent());
-    //add(background);
-    add(player);
+    //add(TileMapComponent());
+    //
     // print(background.loaded);
     // print(background.isLoaded);
 
     // print(background.size.x.toString());
 
-    // background.loaded.then((value) {
-    //   print('*****' + background.size.x.toString());
-    //   camera.followComponent(player,
-    //       worldBounds:
-    //           Rect.fromLTRB(0, 0, background.size.x, background.size.y));
-    //   print('cargado');
-    // });
+    background.loaded.then((value) {
+      print('*****' + background.size.x.toString());
+      final player = PlayerComponent(
+          mapSize: Vector2(background.size.x, background.size.y));
+      add(player);
+      camera.followComponent(player,
+          worldBounds:
+              Rect.fromLTRB(0, 0, background.size.x, background.size.y));
+    });
     // var p = ObjectGroup;
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
+    // print(camera.position.x.toString());
+    // print(camera.position.y.toString());
     elapsedTime += dt;
     if (elapsedTime > 1.0) {
-      add(MeteorComponent());
+      add(MeteorComponent(cameraPosition: camera.position));
       elapsedTime = 0.0;
     }
 

@@ -15,15 +15,14 @@ import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
-  PlayerComponent();
+  Vector2 mapSize;
+  PlayerComponent({required this.mapSize}) : super() {
+    anchor = Anchor.center;
+    debugMode = true;
+  }
 
   @override
   Future<void>? onLoad() async {
-    anchor = Anchor.center;
-    debugMode = true;
-
-    int count = 0;
-
     final spriteImage = await Flame.images.load('dinofull.png');
     final spriteSheet = SpriteSheet(
         image: spriteImage,
@@ -154,7 +153,7 @@ class PlayerComponent extends Character {
     posX = 0;
     posY = 0;
 
-    if (position.y < screenHeight - size[1]) {
+    if (position.y < mapSize.y - size[1]) {
       velocity.y += gravity;
       inGround = true;
     } else {
@@ -173,7 +172,7 @@ class PlayerComponent extends Character {
       if (points.first[0] <= 0.0) {
         // left
         collisionXLeft = true;
-      } else if (points.first[0] >= 4000) {
+      } else if (points.first[0] >= mapSize.x) {
         //MediaQueryData.fromWindow(window).size.height
         // left
         collisionXRight = true;
