@@ -1,16 +1,20 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:testgame/map/Ground.dart';
+import 'package:testgame/map/ground.dart';
+
 import 'package:tiled/tiled.dart';
 
 class TileMapComponent extends PositionComponent {
+  late TiledComponent tiledMap;
+
   @override
   Future<void>? onLoad() async {
-    final tiledMap = await TiledComponent.load('map.tmx', Vector2.all(48));
+    tiledMap = await TiledComponent.load('map.tmx', Vector2.all(32));
     add(tiledMap);
 
-    final objGroup = tiledMap.tileMap.getLayer<ObjectGroup>("trees2");
+    final objGroup = tiledMap.tileMap.getLayer<ObjectGroup>("ground");
 
     for (final obj in objGroup!.objects) {
       print(obj.x);

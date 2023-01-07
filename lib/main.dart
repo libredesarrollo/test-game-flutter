@@ -18,24 +18,31 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    var background = Background();
-    add(background);
+    //var background = Background();
+    //add(background);
     add(ScreenHitbox());
-    //add(TileMapComponent());
+
+    var backgroundTile = TileMapComponent();
+
+    add(backgroundTile);
     //
     // print(background.loaded);
     // print(background.isLoaded);
 
     // print(background.size.x.toString());
 
-    background.loaded.then((value) {
-      print('*****' + background.size.x.toString());
+    backgroundTile.loaded.then((value) {
+      print(backgroundTile.tiledMap.size.x.toString() +
+          "    " +
+          backgroundTile.tiledMap.size.y.toString());
+
       final player = PlayerComponent(
-          mapSize: Vector2(background.size.x, background.size.y));
+          mapSize: Vector2(
+              backgroundTile.tiledMap.size.x, backgroundTile.tiledMap.size.y));
       add(player);
-      camera.followComponent(player,
-          worldBounds:
-              Rect.fromLTRB(0, 0, background.size.x, background.size.y));
+      // camera.followComponent(player,
+      //     worldBounds: Rect.fromLTRB(0, 0, backgroundTile.tiledMap.size.x,
+      //         backgroundTile.tiledMap.size.y));
     });
     // var p = ObjectGroup;
     return super.onLoad();

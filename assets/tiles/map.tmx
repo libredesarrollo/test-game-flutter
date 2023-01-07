@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="7">
  <tileset firstgid="1" source="tile.tsx"/>
- <layer id="1" name="ground" width="30" height="20">
+ <layer id="1" name="map" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -25,4 +25,9 @@
 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 </data>
  </layer>
+ <objectgroup id="2" name="ground">
+  <object id="4" x="834" y="479.5" width="94" height="33"/>
+  <object id="5" x="674.5" y="417" width="92" height="32"/>
+  <object id="6" x="0" y="610" width="961" height="30"/>
+ </objectgroup>
 </map>

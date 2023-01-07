@@ -1,25 +1,26 @@
-import 'dart:async';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
-
-import 'dart:ui';
-
-import 'package:flutter/services.dart';
+import 'package:testgame/components/borrar/meteor_component.dart';
 import 'package:testgame/components/character.dart';
-import 'package:testgame/components/meteor_component.dart';
+import 'package:testgame/map/ground.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
+
   PlayerComponent({required this.mapSize}) : super() {
     anchor = Anchor.center;
     debugMode = true;
   }
+
+  int count = 0;
 
   @override
   Future<void>? onLoad() async {
@@ -27,8 +28,6 @@ class PlayerComponent extends Character {
     final spriteSheet = SpriteSheet(
         image: spriteImage,
         srcSize: Vector2(spriteSheetWidth, spriteSheetHeight));
-
-    //sprite = spriteSheet.getSprite(2, 1);
 
     // init animation
     deadAnimation = spriteSheet.createAnimationByLimit(
@@ -52,13 +51,14 @@ class PlayerComponent extends Character {
 
     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
 
-    // centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
-    // centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
+    centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
+    centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
 
-    position = Vector2(size[0], -size[1]);
+    position = Vector2(centerX, centerY);
 
     add(RectangleHitbox(
-        size: Vector2(size[0] - 70, size[1]), position: Vector2(30, 0)));
+        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
+        position: Vector2(25, 0)));
 
     return super.onLoad();
   }
@@ -131,10 +131,12 @@ class PlayerComponent extends Character {
     //***Y */
     if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
             keysPressed.contains(LogicalKeyboardKey.keyW)) &&
-        !inGround) {
-      animation = jumpAnimation;
+        inGround) {
+      animation = walkAnimation;
       velocity.y = -jumpForce;
       position.y -= 15;
+      inGround = false;
+      animation = jumpAnimation;
     }
     // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
     //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
@@ -153,41 +155,44 @@ class PlayerComponent extends Character {
     posX = 0;
     posY = 0;
 
-    if (position.y < mapSize.y - size[1]) {
+    if (!inGround) {
       velocity.y += gravity;
-      inGround = true;
-    } else {
-      velocity = Vector2.all(0);
-      inGround = false;
+      position.y += velocity.y * dt;
     }
-
-    position += velocity * dt;
 
     super.update(dt);
   }
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
+    print('ground!!!!' + other.toString());
+    print('ground!!!!' + (other is Ground).toString());
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
         collisionXLeft = true;
-      } else if (points.first[0] >= mapSize.x) {
-        //MediaQueryData.fromWindow(window).size.height
+      } else if (points.first[0] >= mapSize.x
+          //MediaQueryData.fromWindow(window).size.height
+
+          ) {
         // left
         collisionXRight = true;
-        //
       }
     }
 
     if (other is MeteorComponent) {
-      print('meteorito');
+      count++;
 
       other.hitbox.removeFromParent();
-      other.removeFromParent();
+      //other.removeFromParent();
+
+      print('meteorito');
     }
 
-    print(other);
+    if (other is Ground) {
+      print('ground');
+      inGround = true;
+    }
 
     super.onCollision(points, other);
   }
