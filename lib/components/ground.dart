@@ -7,10 +7,4 @@ class Ground extends PositionComponent {
     debugMode = true;
     add(RectangleHitbox());
   }
-
-  // @override
-  // Future<void>? onLoad() {
-  //   add(RectangleHitbox());
-  //   return super.onLoad();
-  // }
 }

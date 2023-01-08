@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:testgame/components/ground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,9 +8,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
-import 'package:testgame/components/borrar/meteor_component.dart';
+
 import 'package:testgame/components/character.dart';
-import 'package:testgame/map/ground.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
@@ -73,7 +73,8 @@ class PlayerComponent extends Character {
     // correr
     if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
             keysPressed.contains(LogicalKeyboardKey.keyD)) &&
-        keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        keysPressed.contains(LogicalKeyboardKey.shiftLeft) &&
+        inGround) {
       playerSpeed = 1500;
 
       if (!right) flipHorizontally();
@@ -85,8 +86,9 @@ class PlayerComponent extends Character {
       } else {
         animation = walkSlowAnimation;
       }
-    } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+    } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD)) &&
+        inGround) {
       playerSpeed = 500;
       if (!right) flipHorizontally();
       right = true;
@@ -101,7 +103,8 @@ class PlayerComponent extends Character {
 
     if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
             keysPressed.contains(LogicalKeyboardKey.keyA)) &&
-        keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        keysPressed.contains(LogicalKeyboardKey.shiftLeft) &&
+        inGround) {
       playerSpeed = 1500;
 
       if (right) flipHorizontally();
@@ -113,8 +116,9 @@ class PlayerComponent extends Character {
       } else {
         animation = walkSlowAnimation;
       }
-    } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+    } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+            keysPressed.contains(LogicalKeyboardKey.keyA)) &&
+        inGround) {
       playerSpeed = 500;
 
       if (right) flipHorizontally();
@@ -134,9 +138,10 @@ class PlayerComponent extends Character {
         inGround) {
       animation = walkAnimation;
       velocity.y = -jumpForce;
-      position.y -= 15;
+      position.y -= 30;
       inGround = false;
       animation = jumpAnimation;
+      jumpUp = true;
     }
     // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
     //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
@@ -154,10 +159,17 @@ class PlayerComponent extends Character {
     position.y += playerSpeed * dt * posY;
     posX = 0;
     posY = 0;
-
+    print(position.y);
     if (!inGround) {
+      // en el aire
       velocity.y += gravity;
       position.y += velocity.y * dt;
+
+      if (jumpUp && velocity.y * dt > 0) {
+        print(velocity.y * dt);
+        print('cayendo');
+        jumpUp = false;
+      }
     }
 
     super.update(dt);
@@ -165,8 +177,6 @@ class PlayerComponent extends Character {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    print('ground!!!!' + other.toString());
-    print('ground!!!!' + (other is Ground).toString());
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
@@ -180,17 +190,7 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (other is MeteorComponent) {
-      count++;
-
-      other.hitbox.removeFromParent();
-      //other.removeFromParent();
-
-      print('meteorito');
-    }
-
-    if (other is Ground) {
-      print('ground');
+    if (other is Ground && !jumpUp) {
       inGround = true;
     }
 
@@ -200,6 +200,11 @@ class PlayerComponent extends Character {
   @override
   void onCollisionEnd(PositionComponent other) {
     collisionXLeft = collisionXRight = false;
+
+    if (other is Ground) {
+      inGround = false;
+    }
+
     super.onCollisionEnd(other);
   }
 }

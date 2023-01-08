@@ -4,7 +4,6 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:testgame/components/test/circle_position_component%20copy.dart';
 // import 'package:testgame/components/background.dart';
 
 void main() async {
@@ -54,8 +53,8 @@ class MyGame extends FlameGame
     //   ),
     // );
     // add(Player());
-    add(CirclePositionComponent());
-    add(CirclePositionComponent());
+    // add(CirclePositionComponent());
+    // add(CirclePositionComponent());
     // add(Tiger());
     add(ScreenHitbox());
   }

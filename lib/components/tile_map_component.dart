@@ -2,7 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:testgame/map/ground.dart';
+import 'package:testgame/components/ground.dart';
 
 import 'package:tiled/tiled.dart';
 
