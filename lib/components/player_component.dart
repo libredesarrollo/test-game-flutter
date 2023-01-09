@@ -35,7 +35,7 @@ class PlayerComponent extends Character {
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     jumpAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08);
+        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08, loop: false);
     runAnimation = spriteSheet.createAnimationByLimit(
         xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
     walkAnimation = spriteSheet.createAnimationByLimit(
@@ -69,86 +69,100 @@ class PlayerComponent extends Character {
       animation = idleAnimation;
     }
 
-    //***X */
-    // correr
-    if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD)) &&
-        keysPressed.contains(LogicalKeyboardKey.shiftLeft) &&
-        inGround) {
-      playerSpeed = 1500;
+    if (inGround) {
+//***X */
+      // correr
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+              keysPressed.contains(LogicalKeyboardKey.keyD)) &&
+          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        playerSpeed = 1500;
 
-      if (!right) flipHorizontally();
-      right = true;
+        if (!right) flipHorizontally();
+        right = true;
 
-      if (!collisionXRight) {
-        animation = runAnimation;
-        posX++;
-      } else {
-        animation = walkSlowAnimation;
+        if (!collisionXRight) {
+          animation = runAnimation;
+          posX++;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+          keysPressed.contains(LogicalKeyboardKey.keyD))) {
+        playerSpeed = 500;
+        if (!right) flipHorizontally();
+        right = true;
+
+        if (!collisionXRight) {
+          animation = walkAnimation;
+          posX++;
+        } else {
+          animation = walkSlowAnimation;
+        }
       }
-    } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD)) &&
-        inGround) {
-      playerSpeed = 500;
-      if (!right) flipHorizontally();
-      right = true;
 
-      if (!collisionXRight) {
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+              keysPressed.contains(LogicalKeyboardKey.keyA)) &&
+          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        playerSpeed = 1500;
+
+        if (right) flipHorizontally();
+        right = false;
+
+        if (!collisionXLeft) {
+          animation = runAnimation;
+          posX--;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+          keysPressed.contains(LogicalKeyboardKey.keyA))) {
+        playerSpeed = 500;
+
+        if (right) flipHorizontally();
+        right = false;
+
+        if (!collisionXLeft) {
+          animation = walkAnimation;
+          posX--;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      }
+
+      //***Y */
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+          keysPressed.contains(LogicalKeyboardKey.keyW))) {
         animation = walkAnimation;
-        posX++;
-      } else {
-        animation = walkSlowAnimation;
+        velocity.y = -jumpForceUp;
+        position.y -= jumpForceXY;
+        inGround = false;
+        animation = jumpAnimation;
+        jumpUp = true;
+
+        if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+            keysPressed.contains(LogicalKeyboardKey.keyA))) {
+          // playerSpeed = 500;
+
+          if (right) flipHorizontally();
+          right = false;
+
+          if (!collisionXLeft) {
+            velocity.x = -jumpForceSide;
+            position.x -= jumpForceXY;
+          }
+        } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD))) {
+          // playerSpeed = 500;
+          if (!right) flipHorizontally();
+          right = true;
+
+          if (!collisionXRight) {
+            velocity.x = jumpForceSide;
+            position.x += jumpForceXY;
+          }
+        }
       }
-    }
-
-    if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA)) &&
-        keysPressed.contains(LogicalKeyboardKey.shiftLeft) &&
-        inGround) {
-      playerSpeed = 1500;
-
-      if (right) flipHorizontally();
-      right = false;
-
-      if (!collisionXLeft) {
-        animation = runAnimation;
-        posX--;
-      } else {
-        animation = walkSlowAnimation;
-      }
-    } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA)) &&
-        inGround) {
-      playerSpeed = 500;
-
-      if (right) flipHorizontally();
-      right = false;
-
-      if (!collisionXLeft) {
-        animation = walkAnimation;
-        posX--;
-      } else {
-        animation = walkSlowAnimation;
-      }
-    }
-
-    //***Y */
-    if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
-            keysPressed.contains(LogicalKeyboardKey.keyW)) &&
-        inGround) {
-      animation = walkAnimation;
-      velocity.y = -jumpForce;
-      position.y -= 30;
-      inGround = false;
-      animation = jumpAnimation;
-      jumpUp = true;
-    }
-    // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
-    //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
-    //   animation = walkAnimation;
-
-    //   posY++;
-    // }
+    } else {}
 
     return true;
   }
@@ -159,15 +173,16 @@ class PlayerComponent extends Character {
     position.y += playerSpeed * dt * posY;
     posX = 0;
     posY = 0;
-    print(position.y);
+
     if (!inGround) {
       // en el aire
       velocity.y += gravity;
-      position.y += velocity.y * dt;
+      position += velocity * dt;
 
       if (jumpUp && velocity.y * dt > 0) {
-        print(velocity.y * dt);
-        print('cayendo');
+        // print(velocity.y * dt);
+        // print('cayendo');
+        velocity = Vector2.all(0);
         jumpUp = false;
       }
     }
@@ -203,6 +218,7 @@ class PlayerComponent extends Character {
 
     if (other is Ground) {
       inGround = false;
+      jumpAnimation.reset();
     }
 
     super.onCollisionEnd(other);

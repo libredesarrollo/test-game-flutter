@@ -14,7 +14,7 @@ class Character extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
   int animationIndex = 0;
 
-  double gravity = 1.8;
+  double gravity = 9.8;
   Vector2 velocity = Vector2(0, 0);
 
   late double screenWidth, screenHeight, centerX, centerY;
@@ -22,7 +22,7 @@ class Character extends SpriteAnimationComponent
 
   int posX = 0, posY = 0;
   double playerSpeed = 500;
-  final double jumpForce = 260;
+  final double jumpForceUp = 300, jumpForceXY = 20, jumpForceSide = 100;
 
   bool inGround = false,
       jumpUp = false,
