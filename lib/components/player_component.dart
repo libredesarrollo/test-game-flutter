@@ -60,6 +60,11 @@ class PlayerComponent extends Character {
         size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
         position: Vector2(25, 0)));
 
+    // add(RectangleHitbox(
+    //   size: Vector2(50, 10),
+    //   position: Vector2(70, spriteSheetWidth / 4 - 70),
+    // ));
+
     return super.onLoad();
   }
 
@@ -162,7 +167,7 @@ class PlayerComponent extends Character {
           }
         }
       }
-    } else {}
+    }
 
     return true;
   }
@@ -191,7 +196,7 @@ class PlayerComponent extends Character {
   }
 
   @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
+  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
@@ -206,8 +211,35 @@ class PlayerComponent extends Character {
     }
 
     if (other is Ground && !jumpUp) {
+      print('Ground');
+      print(
+          "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
       inGround = true;
     }
+
+    super.onCollisionStart(points, other);
+  }
+
+  @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    // if (other is ScreenHitbox) {
+    //   if (points.first[0] <= 0.0) {
+    //     // left
+    //     collisionXLeft = true;
+    //   } else if (points.first[0] >= mapSize.x
+    //       //MediaQueryData.fromWindow(window).size.height
+
+    //       ) {
+    //     // left
+    //     collisionXRight = true;
+    //   }
+    // }
+
+    // if (other is Ground && !jumpUp) {
+    //   print(
+    //       "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
+    //   inGround = true;
+    // }
 
     super.onCollision(points, other);
   }

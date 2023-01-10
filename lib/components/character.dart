@@ -22,7 +22,7 @@ class Character extends SpriteAnimationComponent
 
   int posX = 0, posY = 0;
   double playerSpeed = 500;
-  final double jumpForceUp = 300, jumpForceXY = 20, jumpForceSide = 100;
+  final double jumpForceUp = 400, jumpForceXY = 20, jumpForceSide = 100;
 
   bool inGround = false,
       jumpUp = false,
