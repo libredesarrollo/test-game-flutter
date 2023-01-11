@@ -20,9 +20,9 @@ class Character extends SpriteAnimationComponent
   late double screenWidth, screenHeight, centerX, centerY;
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
 
-  int posX = 0, posY = 0;
+  // int posX = 0, posY = 0;
   double playerSpeed = 500;
-  final double jumpForceUp = 400, jumpForceXY = 20, jumpForceSide = 100;
+  final double jumpForceUp = 360, jumpForceXY = 20, jumpForceSide = 100;
 
   bool inGround = false,
       jumpUp = false,

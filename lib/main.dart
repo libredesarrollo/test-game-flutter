@@ -54,7 +54,7 @@ class MyGame extends FlameGame
     // print(camera.position.y.toString());
     elapsedTime += dt;
     if (elapsedTime > 1.0) {
-      add(MeteorComponent(cameraPosition: camera.position));
+      //add(MeteorComponent(cameraPosition: camera.position));
       elapsedTime = 0.0;
     }
 

@@ -17,7 +17,7 @@ class PlayerComponent extends Character {
 
   PlayerComponent({required this.mapSize}) : super() {
     anchor = Anchor.center;
-    debugMode = true;
+    debugMode = false;
   }
 
   int count = 0;
@@ -56,14 +56,14 @@ class PlayerComponent extends Character {
 
     position = Vector2(centerX, centerY);
 
-    add(RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
-        position: Vector2(25, 0)));
-
     // add(RectangleHitbox(
-    //   size: Vector2(50, 10),
-    //   position: Vector2(70, spriteSheetWidth / 4 - 70),
-    // ));
+    //     size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
+    //     position: Vector2(25, 10)));
+
+    add(RectangleHitbox(
+      size: Vector2(50, 10),
+      position: Vector2(70, spriteSheetWidth / 4 - 70),
+    ));
 
     return super.onLoad();
   }
@@ -87,7 +87,9 @@ class PlayerComponent extends Character {
 
         if (!collisionXRight) {
           animation = runAnimation;
-          posX++;
+          // posX++;
+          velocity.x = jumpForceSide;
+          position.x += jumpForceXY * 2;
         } else {
           animation = walkSlowAnimation;
         }
@@ -99,7 +101,9 @@ class PlayerComponent extends Character {
 
         if (!collisionXRight) {
           animation = walkAnimation;
-          posX++;
+          // posX++;
+          velocity.x = jumpForceSide;
+          position.x += jumpForceXY;
         } else {
           animation = walkSlowAnimation;
         }
@@ -115,7 +119,9 @@ class PlayerComponent extends Character {
 
         if (!collisionXLeft) {
           animation = runAnimation;
-          posX--;
+          // posX--;
+          velocity.x = -jumpForceSide;
+          position.x -= jumpForceXY * 2;
         } else {
           animation = walkSlowAnimation;
         }
@@ -128,7 +134,8 @@ class PlayerComponent extends Character {
 
         if (!collisionXLeft) {
           animation = walkAnimation;
-          posX--;
+          velocity.x = -jumpForceSide;
+          position.x -= jumpForceXY;
         } else {
           animation = walkSlowAnimation;
         }
@@ -174,10 +181,10 @@ class PlayerComponent extends Character {
 
   @override
   void update(double dt) {
-    position.x += playerSpeed * dt * posX;
-    position.y += playerSpeed * dt * posY;
-    posX = 0;
-    posY = 0;
+    // position.x += playerSpeed * dt * posX;
+    // position.y += playerSpeed * dt * posY;
+    // posX = 0;
+    // posY = 0;
 
     if (!inGround) {
       // en el aire
@@ -210,12 +217,12 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (other is Ground && !jumpUp) {
-      print('Ground');
-      print(
-          "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
-      inGround = true;
-    }
+    // if (other is Ground && !jumpUp) {
+    //   print('Ground');
+    //   print(
+    //       "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
+    //   inGround = true;
+    // }
 
     super.onCollisionStart(points, other);
   }
@@ -235,9 +242,20 @@ class PlayerComponent extends Character {
     //   }
     // }
 
-    // if (other is Ground && !jumpUp) {
-    //   print(
-    //       "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
+    if (other is Ground && !jumpUp) {
+      // print(" ${points.first[1].toString()}   --- ${position.y}");
+      print("${position.y}");
+
+      if (other.position.y < (position.y + 50)) {}
+
+      inGround = true;
+    }
+
+    //  else if (other is Ground &&
+    //     jumpUp &&
+    //     other.position.y - 100 > (position.y)) {
+    //   //if (other.position.y < (position.y + 50))
+    //   print(" ${other.position.y.toString()}   --- ${position.y}");
     //   inGround = true;
     // }
 
