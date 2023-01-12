@@ -17,7 +17,7 @@ class PlayerComponent extends Character {
 
   PlayerComponent({required this.mapSize}) : super() {
     anchor = Anchor.center;
-    debugMode = false;
+    debugMode = true;
   }
 
   int count = 0;
@@ -56,14 +56,26 @@ class PlayerComponent extends Character {
 
     position = Vector2(centerX, centerY);
 
+    body = RectangleHitbox(
+        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
+        position: Vector2(25, 10));
+
+    foot = RectangleHitbox(
+      size: Vector2(50, 10),
+      position: Vector2(70, spriteSheetWidth / 4 - 70),
+    );
+
+    add(foot);
+    add(body);
+
     // add(RectangleHitbox(
     //     size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
     //     position: Vector2(25, 10)));
 
-    add(RectangleHitbox(
-      size: Vector2(50, 10),
-      position: Vector2(70, spriteSheetWidth / 4 - 70),
-    ));
+    // add(RectangleHitbox(
+    //   size: Vector2(50, 10),
+    //   position: Vector2(70, spriteSheetWidth / 4 - 70),
+    // ));
 
     return super.onLoad();
   }
@@ -80,8 +92,6 @@ class PlayerComponent extends Character {
       if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
               keysPressed.contains(LogicalKeyboardKey.keyD)) &&
           keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        playerSpeed = 1500;
-
         if (!right) flipHorizontally();
         right = true;
 
@@ -95,7 +105,6 @@ class PlayerComponent extends Character {
         }
       } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
           keysPressed.contains(LogicalKeyboardKey.keyD))) {
-        playerSpeed = 500;
         if (!right) flipHorizontally();
         right = true;
 
@@ -112,8 +121,6 @@ class PlayerComponent extends Character {
       if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
               keysPressed.contains(LogicalKeyboardKey.keyA)) &&
           keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        playerSpeed = 1500;
-
         if (right) flipHorizontally();
         right = false;
 
@@ -127,8 +134,6 @@ class PlayerComponent extends Character {
         }
       } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
           keysPressed.contains(LogicalKeyboardKey.keyA))) {
-        playerSpeed = 500;
-
         if (right) flipHorizontally();
         right = false;
 
@@ -244,11 +249,14 @@ class PlayerComponent extends Character {
 
     if (other is Ground && !jumpUp) {
       // print(" ${points.first[1].toString()}   --- ${position.y}");
-      print("${position.y}");
+      //print("${position.y}");
 
-      if (other.position.y < (position.y + 50)) {}
+      //if (other.position.y < (position.y + 50)) {}
 
-      inGround = true;
+      print(foot.isColliding);
+      if (foot.isColliding) {
+        inGround = true;
+      }
     }
 
     //  else if (other is Ground &&

@@ -21,7 +21,7 @@ class Character extends SpriteAnimationComponent
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
 
   // int posX = 0, posY = 0;
-  double playerSpeed = 500;
+  //double playerSpeed = 500;
   final double jumpForceUp = 360, jumpForceXY = 20, jumpForceSide = 100;
 
   bool inGround = false,
@@ -36,4 +36,6 @@ class Character extends SpriteAnimationComponent
       runAnimation,
       walkAnimation,
       walkSlowAnimation;
+
+  late RectangleHitbox foot, body;
 }
