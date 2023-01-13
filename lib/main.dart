@@ -72,5 +72,27 @@ void main(List<String> args) async {
   await Flame.device.fullScreen();
   await Flame.device.setPortrait();
 
-  runApp(GameWidget(game: MyGame()));
+  runApp(GameWidget(
+    game: MyGame(),
+    overlayBuilderMap: {
+      'MainMenu': (context, MyGame game) => MainMenu(game: game),
+    },
+  ));
+}
+
+class MainMenu extends StatefulWidget {
+  MainMenu({Key? key, required this.game}) : super(key: key);
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+  final MyGame game;
+}
+
+class _MainMenuState extends State<MainMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Holasas asa sas as asas as",
+      style: TextStyle(color: Colors.white),
+    );
+  }
 }

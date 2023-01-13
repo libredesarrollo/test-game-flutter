@@ -46,15 +46,9 @@ class PlayerComponent extends Character {
 
     animation = idleAnimation;
 
-    screenWidth = MediaQueryData.fromWindow(window).size.width;
-    screenHeight = MediaQueryData.fromWindow(window).size.height;
-
     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
 
-    centerX = (screenWidth / 2) - (spriteSheetWidth / 2);
-    centerY = (screenHeight / 2) - (spriteSheetHeight / 2);
-
-    position = Vector2(centerX, centerY);
+    position = Vector2(spriteSheetWidth / 4, 0);
 
     body = RectangleHitbox(
         size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
@@ -83,13 +77,85 @@ class PlayerComponent extends Character {
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (keysPressed.isEmpty) {
+      movementType = MovementType.idle;
       animation = idleAnimation;
     }
 
     if (inGround) {
-//***X */
-      // correr
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+      //*** RIGHT
+      if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+          keysPressed.contains(LogicalKeyboardKey.keyD)) {
+        if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+          //RUN
+          movementType = MovementType.runright;
+        } else {
+          movementType = MovementType.walkingright;
+        }
+      }
+      //*** LEFT
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+          keysPressed.contains(LogicalKeyboardKey.keyA))) {
+        if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+          //RUN
+          movementType = MovementType.runleft;
+        } else {
+          movementType = MovementType.walkingleft;
+        }
+      }
+      //*** JUMP
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+          keysPressed.contains(LogicalKeyboardKey.keyW))) {
+        movementType = MovementType.jump;
+
+        if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD))) {
+          movementType = MovementType.jumpright;
+        } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+            keysPressed.contains(LogicalKeyboardKey.keyA))) {
+          movementType = MovementType.jumpleft;
+        }
+      }
+
+      switch (movementType) {
+        case MovementType.walkingright:
+        case MovementType.runright:
+          if (!right) flipHorizontally();
+          right = true;
+
+          if (!collisionXRight) {
+            animation = (movementType == MovementType.walkingright
+                ? walkAnimation
+                : runAnimation);
+
+            velocity.x = jumpForceSide;
+            position.x += jumpForceXY *
+                (movementType == MovementType.walkingright ? 1 : 2);
+          } else {
+            animation = walkSlowAnimation;
+          }
+          break;
+
+        case MovementType.walkingleft:
+        case MovementType.runleft:
+          if (right) flipHorizontally();
+          right = false;
+
+          if (!collisionXLeft) {
+            animation = (movementType == MovementType.walkingleft
+                ? walkAnimation
+                : runAnimation);
+            velocity.x = -jumpForceSide;
+            position.x -= jumpForceXY *
+                (movementType == MovementType.walkingleft ? 1 : 2);
+          } else {
+            animation = walkSlowAnimation;
+          }
+          break;
+
+        default:
+      }
+
+      /*   if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
               keysPressed.contains(LogicalKeyboardKey.keyD)) &&
           keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         if (!right) flipHorizontally();
@@ -179,8 +245,8 @@ class PlayerComponent extends Character {
           }
         }
       }
+    }*/
     }
-
     return true;
   }
 
@@ -280,5 +346,12 @@ class PlayerComponent extends Character {
     }
 
     super.onCollisionEnd(other);
+  }
+
+  void reset() {
+    // y = groundYPos;
+    // jumpVelocity = 0.0;
+    // jumpCount = 0;
+    // status = TRexStatus.running;
   }
 }

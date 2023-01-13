@@ -10,6 +10,17 @@ import 'dart:ui';
 
 import 'package:flutter/services.dart';
 
+enum MovementType {
+  walkingright,
+  walkingleft,
+  runright,
+  runleft,
+  idle,
+  jump,
+  jumpright,
+  jumpleft
+}
+
 class Character extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
   int animationIndex = 0;
@@ -17,7 +28,9 @@ class Character extends SpriteAnimationComponent
   double gravity = 9.8;
   Vector2 velocity = Vector2(0, 0);
 
-  late double screenWidth, screenHeight, centerX, centerY;
+  MovementType movementType = MovementType.idle;
+
+  // late double screenWidth, screenHeight, centerX, centerY;
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
 
   // int posX = 0, posY = 0;
