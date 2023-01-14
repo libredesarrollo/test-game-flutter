@@ -22,7 +22,8 @@ class TileMapComponent extends PositionComponent {
       print(obj.x);
       print(obj.x);
 
-      add(Ground(size: Vector2(obj.width, 8), position: Vector2(obj.x, obj.y)));
+      add(Ground(
+          size: Vector2(obj.width, 20), position: Vector2(obj.x, obj.y)));
     }
 
     // List<Offset> barrierOffsets = [];

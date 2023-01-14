@@ -15,6 +15,7 @@ class MyGame extends FlameGame
         HasKeyboardHandlerComponents,
         HasCollisionDetection {
   double elapsedTime = 0.0;
+  double dead = 0;
 
   @override
   Future<void>? onLoad() {
@@ -54,7 +55,7 @@ class MyGame extends FlameGame
     // print(camera.position.y.toString());
     elapsedTime += dt;
     if (elapsedTime > 1.0) {
-      //add(MeteorComponent(cameraPosition: camera.position));
+      add(MeteorComponent(cameraPosition: camera.position));
       elapsedTime = 0.0;
     }
 
@@ -67,6 +68,8 @@ class MyGame extends FlameGame
   // }
 }
 
+//https://docs.flame-engine.org/1.5.0/tutorials/platformer/step_7.html?highlight=overlaybuildermap
+
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
@@ -75,8 +78,14 @@ void main(List<String> args) async {
   runApp(GameWidget(
     game: MyGame(),
     overlayBuilderMap: {
-      'MainMenu': (context, MyGame game) => MainMenu(game: game),
+      'MainMenu': (context, MyGame game) {
+        return MainMenu(game: game);
+      },
+      'GameOver': (context, MyGame game) {
+        return GameOver(game: game);
+      },
     },
+    initialActiveOverlays: const ['GameOver'],
   ));
 }
 
@@ -91,8 +100,70 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Holasas asa sas as asas as",
+      "Holasas asa sas as asas as ${widget.game.dead}",
       style: TextStyle(color: Colors.white),
+    );
+  }
+}
+
+class GameOver extends StatelessWidget {
+  // Reference to parent game.
+  final MyGame game;
+  const GameOver({super.key, required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    const blackTextColor = Color.fromRGBO(0, 0, 0, 1.0);
+    const whiteTextColor = Color.fromRGBO(255, 255, 255, 1.0);
+
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          height: 200,
+          width: 300,
+          decoration: const BoxDecoration(
+            color: blackTextColor,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Game Over',
+                style: TextStyle(
+                  color: whiteTextColor,
+                  fontSize: 24,
+                ),
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                width: 200,
+                height: 75,
+                child: ElevatedButton(
+                  onPressed: () {
+                    //game.reset();
+                    game.overlays.remove('GameOver');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: whiteTextColor,
+                  ),
+                  child: const Text(
+                    'Play Again',
+                    style: TextStyle(
+                      fontSize: 28.0,
+                      color: blackTextColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

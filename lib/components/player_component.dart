@@ -10,6 +10,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
 
 import 'package:testgame/components/character.dart';
+import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
@@ -31,7 +32,7 @@ class PlayerComponent extends Character {
 
     // init animation
     deadAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 0, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
+        xInit: 0, yInit: 0, step: 8, sizeX: 5, stepTime: .08, loop: false);
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     jumpAnimation = spriteSheet.createAnimationByLimit(
@@ -44,11 +45,9 @@ class PlayerComponent extends Character {
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
-    animation = idleAnimation;
-
     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
 
-    position = Vector2(spriteSheetWidth / 4, 0);
+    reset();
 
     body = RectangleHitbox(
         size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
@@ -329,38 +328,24 @@ class PlayerComponent extends Character {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    // if (other is ScreenHitbox) {
-    //   if (points.first[0] <= 0.0) {
-    //     // left
-    //     collisionXLeft = true;
-    //   } else if (points.first[0] >= mapSize.x
-    //       //MediaQueryData.fromWindow(window).size.height
+    if (other is ScreenHitbox) {
+      if (points.first[0] <= 0.0) {
+        // left
+        collisionXLeft = true;
+      } else if (points.first[0] >= mapSize.x
+          //MediaQueryData.fromWindow(window).size.height
 
-    //       ) {
-    //     // left
-    //     collisionXRight = true;
-    //   }
-    // }
+          ) {
+        // left
+        collisionXRight = true;
+      }
+    }
 
     if (other is Ground && !jumpUp) {
-      // print(" ${points.first[1].toString()}   --- ${position.y}");
-      //print("${position.y}");
-
-      //if (other.position.y < (position.y + 50)) {}
-
-      print(foot.isColliding);
       if (foot.isColliding) {
         inGround = true;
       }
     }
-
-    //  else if (other is Ground &&
-    //     jumpUp &&
-    //     other.position.y - 100 > (position.y)) {
-    //   //if (other.position.y < (position.y + 50))
-    //   print(" ${other.position.y.toString()}   --- ${position.y}");
-    //   inGround = true;
-    // }
 
     super.onCollision(points, other);
   }
@@ -374,11 +359,28 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
+    if (other is MeteorComponent && body.isColliding) {
+      print('dead');
+      reset(dead: true);
+    }
+
     super.onCollisionEnd(other);
   }
 
-  void reset() {
-    // y = groundYPos;
+  void reset({bool dead = false}) {
+    print('dead ---------');
+    position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight / 4);
+    movementType = MovementType.idle;
+    if (dead) {
+      animation = deadAnimation;
+
+      deadAnimation.onComplete = () {
+        deadAnimation.reset();
+        animation = idleAnimation;
+      };
+    } else {
+      animation = idleAnimation;
+    }
     // jumpVelocity = 0.0;
     // jumpCount = 0;
     // status = TRexStatus.running;
