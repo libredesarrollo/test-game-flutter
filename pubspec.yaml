@@ -65,6 +65,7 @@ flutter:
   assets:
     - assets/images/dino.png
     - assets/tiles/map.tmx
+    - assets/tiles/map2.tmx
     - assets/tiles/tile.tsx
     - assets/images/map.png
     - assets/images/tile.png

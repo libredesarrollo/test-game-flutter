@@ -11,7 +11,7 @@ class TileMapComponent extends PositionComponent {
 
   @override
   Future<void>? onLoad() async {
-    tiledMap = await TiledComponent.load('map.tmx', Vector2.all(32));
+    tiledMap = await TiledComponent.load('map2.tmx', Vector2.all(32));
     add(tiledMap);
 
     final objGroup = tiledMap.tileMap.getLayer<ObjectGroup>("ground");
@@ -22,7 +22,7 @@ class TileMapComponent extends PositionComponent {
       print(obj.x);
       print(obj.x);
 
-      add(Ground(size: Vector2(obj.width, 5), position: Vector2(obj.x, obj.y)));
+      add(Ground(size: Vector2(obj.width, 8), position: Vector2(obj.x, obj.y)));
     }
 
     // List<Offset> barrierOffsets = [];

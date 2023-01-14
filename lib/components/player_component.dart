@@ -151,6 +151,35 @@ class PlayerComponent extends Character {
             animation = walkSlowAnimation;
           }
           break;
+        case MovementType.jump:
+        case MovementType.jumpleft:
+        case MovementType.jumpright:
+          animation = walkAnimation;
+          velocity.y = -jumpForceUp;
+          position.y -= jumpForceXY;
+          inGround = false;
+          animation = jumpAnimation;
+          jumpUp = true;
+
+          if (movementType == MovementType.jumpleft) {
+            if (right) flipHorizontally();
+            right = false;
+
+            if (!collisionXLeft) {
+              velocity.x = -jumpForceSide;
+              position.x -= jumpForceXY;
+            }
+          } else if (movementType == MovementType.jumpright) {
+            if (!right) flipHorizontally();
+            right = true;
+
+            if (!collisionXRight) {
+              velocity.x = jumpForceSide;
+              position.x += jumpForceXY;
+            }
+          }
+
+          break;
 
         default:
       }

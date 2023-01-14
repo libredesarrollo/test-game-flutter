@@ -40,9 +40,9 @@ class MyGame extends FlameGame
           mapSize: Vector2(
               backgroundTile.tiledMap.size.x, backgroundTile.tiledMap.size.y));
       add(player);
-      // camera.followComponent(player,
-      //     worldBounds: Rect.fromLTRB(0, 0, backgroundTile.tiledMap.size.x,
-      //         backgroundTile.tiledMap.size.y));
+      camera.followComponent(player,
+          worldBounds: Rect.fromLTRB(0, 0, backgroundTile.tiledMap.size.x,
+              backgroundTile.tiledMap.size.y));
     });
     // var p = ObjectGroup;
     return super.onLoad();
