@@ -11,12 +11,14 @@ import 'package:flame/components.dart';
 
 import 'package:testgame/components/character.dart';
 import 'package:testgame/components/meteor_component.dart';
+import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
+  MyGame game;
 
-  PlayerComponent({required this.mapSize}) : super() {
+  PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
     debugMode = true;
   }
@@ -359,17 +361,35 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
+    // body.onCollisionEndCallback = (other) {
+    //    if (other is MeteorComponent && body.isColliding) {
+    //   print("dead ${game.colisionMeteors}");
+    //   game.colisionMeteors++;
+
+    //   game.overlays.remove('Statistics');
+    //   game.overlays.add('Statistics');
+
+    //   //reset(dead: true);
+    // }
+    // };
+
     if (other is MeteorComponent && body.isColliding) {
-      print('dead');
-      reset(dead: true);
+      print("dead ${game.colisionMeteors}");
+      game.colisionMeteors++;
+
+      game.overlays.remove('Statistics');
+      game.overlays.add('Statistics');
+
+      //reset(dead: true);
     }
 
     super.onCollisionEnd(other);
   }
 
   void reset({bool dead = false}) {
-    print('dead ---------');
-    position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight / 4);
+    //game.colisionMeteors = 5;
+    print('reset --------- ${game.colisionMeteors}');
+    position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
     movementType = MovementType.idle;
     if (dead) {
       animation = deadAnimation;
