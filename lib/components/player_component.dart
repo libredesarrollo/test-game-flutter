@@ -53,12 +53,13 @@ class PlayerComponent extends Character {
 
     body = RectangleHitbox(
         size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
-        position: Vector2(25, 10));
+        position: Vector2(25, 10))
+      ..collisionType = CollisionType.active;
 
     foot = RectangleHitbox(
       size: Vector2(50, 10),
       position: Vector2(70, spriteSheetWidth / 4 - 70),
-    );
+    )..collisionType = CollisionType.passive;
 
     add(foot);
     add(body);
@@ -387,8 +388,7 @@ class PlayerComponent extends Character {
   }
 
   void reset({bool dead = false}) {
-    //game.colisionMeteors = 5;
-    print('reset --------- ${game.colisionMeteors}');
+    game.colisionMeteors = 0;
     position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
     movementType = MovementType.idle;
     if (dead) {

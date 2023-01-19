@@ -93,6 +93,6 @@ void main(List<String> args) async {
         );
       }
     },
-    initialActiveOverlays: const ['Statistics', 'GameOver'],
+    initialActiveOverlays: const ['Statistics'],
   ));
 }
