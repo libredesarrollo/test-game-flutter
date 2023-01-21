@@ -18,6 +18,7 @@ class MyGame extends FlameGame
         HasCollisionDetection {
   double elapsedTime = 0.0;
   double colisionMeteors = 0;
+  bool pauseGame = false;
   late PlayerComponent player;
 
   @override

@@ -64,15 +64,6 @@ class PlayerComponent extends Character {
     add(foot);
     add(body);
 
-    // add(RectangleHitbox(
-    //     size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
-    //     position: Vector2(25, 10)));
-
-    // add(RectangleHitbox(
-    //   size: Vector2(50, 10),
-    //   position: Vector2(70, spriteSheetWidth / 4 - 70),
-    // ));
-
     return super.onLoad();
   }
 
@@ -185,108 +176,13 @@ class PlayerComponent extends Character {
 
         default:
       }
-
-      /*   if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-              keysPressed.contains(LogicalKeyboardKey.keyD)) &&
-          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        if (!right) flipHorizontally();
-        right = true;
-
-        if (!collisionXRight) {
-          animation = runAnimation;
-          // posX++;
-          velocity.x = jumpForceSide;
-          position.x += jumpForceXY * 2;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-          keysPressed.contains(LogicalKeyboardKey.keyD))) {
-        if (!right) flipHorizontally();
-        right = true;
-
-        if (!collisionXRight) {
-          animation = walkAnimation;
-          // posX++;
-          velocity.x = jumpForceSide;
-          position.x += jumpForceXY;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      }
-
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-              keysPressed.contains(LogicalKeyboardKey.keyA)) &&
-          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        if (right) flipHorizontally();
-        right = false;
-
-        if (!collisionXLeft) {
-          animation = runAnimation;
-          // posX--;
-          velocity.x = -jumpForceSide;
-          position.x -= jumpForceXY * 2;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-          keysPressed.contains(LogicalKeyboardKey.keyA))) {
-        if (right) flipHorizontally();
-        right = false;
-
-        if (!collisionXLeft) {
-          animation = walkAnimation;
-          velocity.x = -jumpForceSide;
-          position.x -= jumpForceXY;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      }
-
-      //***Y */
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
-          keysPressed.contains(LogicalKeyboardKey.keyW))) {
-        animation = walkAnimation;
-        velocity.y = -jumpForceUp;
-        position.y -= jumpForceXY;
-        inGround = false;
-        animation = jumpAnimation;
-        jumpUp = true;
-
-        if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA))) {
-          // playerSpeed = 500;
-
-          if (right) flipHorizontally();
-          right = false;
-
-          if (!collisionXLeft) {
-            velocity.x = -jumpForceSide;
-            position.x -= jumpForceXY;
-          }
-        } else if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD))) {
-          // playerSpeed = 500;
-          if (!right) flipHorizontally();
-          right = true;
-
-          if (!collisionXRight) {
-            velocity.x = jumpForceSide;
-            position.x += jumpForceXY;
-          }
-        }
-      }
-    }*/
     }
     return true;
   }
 
   @override
   void update(double dt) {
-    // position.x += playerSpeed * dt * posX;
-    // position.y += playerSpeed * dt * posY;
-    // posX = 0;
-    // posY = 0;
+    super.update(dt);
 
     if (!inGround) {
       // en el aire
@@ -294,14 +190,10 @@ class PlayerComponent extends Character {
       position += velocity * dt;
 
       if (jumpUp && velocity.y * dt > 0) {
-        // print(velocity.y * dt);
-        // print('cayendo');
         velocity = Vector2.all(0);
         jumpUp = false;
       }
     }
-
-    super.update(dt);
   }
 
   @override
@@ -318,13 +210,6 @@ class PlayerComponent extends Character {
         collisionXRight = true;
       }
     }
-
-    // if (other is Ground && !jumpUp) {
-    //   print('Ground');
-    //   print(
-    //       "${points.first[0].toString()}  ----  ${points.first[1].toString()}");
-    //   inGround = true;
-    // }
 
     super.onCollisionStart(points, other);
   }
@@ -362,18 +247,6 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
-    // body.onCollisionEndCallback = (other) {
-    //    if (other is MeteorComponent && body.isColliding) {
-    //   print("dead ${game.colisionMeteors}");
-    //   game.colisionMeteors++;
-
-    //   game.overlays.remove('Statistics');
-    //   game.overlays.add('Statistics');
-
-    //   //reset(dead: true);
-    // }
-    // };
-
     if (other is MeteorComponent && body.isColliding) {
       print("dead ${game.colisionMeteors}");
       game.colisionMeteors++;
@@ -384,22 +257,29 @@ class PlayerComponent extends Character {
       //reset(dead: true);
     }
 
+    if (game.colisionMeteors >= 3) {
+      reset(dead: true);
+    }
+
     super.onCollisionEnd(other);
   }
 
   void reset({bool dead = false}) {
-    game.colisionMeteors = 0;
-    position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
     movementType = MovementType.idle;
+    velocity = Vector2.all(0);
     if (dead) {
       animation = deadAnimation;
 
       deadAnimation.onComplete = () {
         deadAnimation.reset();
         animation = idleAnimation;
+        game.colisionMeteors = 0;
+        position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       };
     } else {
       animation = idleAnimation;
+      game.colisionMeteors = 0;
+      position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
     }
     // jumpVelocity = 0.0;
     // jumpCount = 0;

@@ -8,11 +8,13 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flame/components.dart';
+import 'package:testgame/components/test/main%20copy%203.dart';
 
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
 class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
   Vector2 cameraPosition;
+
   MeteorComponent({required this.cameraPosition}) : super() {
     debugMode = true;
   }
@@ -60,6 +62,8 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
 
   @override
   void update(double dt) {
+    super.update(dt);
+
     position.y += circleSpeed * dt;
     super.update(dt);
     if (position.y > cameraPosition.y + screenHeight) {

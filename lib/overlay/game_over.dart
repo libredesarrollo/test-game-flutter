@@ -36,6 +36,7 @@ class _GameOverState extends State<GameOver> {
                 print('hello');
                 //widget.game.colisionMeteors = 50;
                 widget.game.player.reset(dead: true);
+                widget.game.paused = true;
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

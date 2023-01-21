@@ -15,18 +15,42 @@ class _StatisticsState extends State<Statistics> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Count colision ${widget.game.colisionMeteors}',
-            style: const TextStyle(color: Colors.white, fontSize: 30),
-          ),
-          SizedBox(
-            height: 10,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Count colision ${widget.game.colisionMeteors}',
+                style: const TextStyle(color: Colors.white, fontSize: 30),
+              ),
+              const Expanded(
+                child: SizedBox(
+                  height: 10,
+                ),
+              ),
+              GestureDetector(
+                  onTap: () {
+                    widget.game.paused = !widget.game.paused;
+                    setState(() {});
+                  },
+                  child: Icon(
+                      widget.game.paused == true
+                          ? Icons.play_arrow
+                          : Icons.pause,
+                      color: Colors.white,
+                      size: 40)),
+              GestureDetector(
+                  onTap: () {
+                    print("ssssss");
+                    widget.game.player.reset();
+                  },
+                  child:
+                      const Icon(Icons.replay, color: Colors.white, size: 40)),
+            ],
           ),
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Icon(
