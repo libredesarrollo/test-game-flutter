@@ -70,41 +70,45 @@ class PlayerComponent extends Character {
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (keysPressed.isEmpty) {
-      movementType = MovementType.idle;
       animation = idleAnimation;
+      movementType = MovementType.idle;
+      velocity = Vector2.all(0);
     }
 
     if (inGround) {
-      //*** RIGHT
+      // RIGHT
       if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
           keysPressed.contains(LogicalKeyboardKey.keyD)) {
         if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-          //RUN
+          // RUN
           movementType = MovementType.runright;
         } else {
+          // WALKING
           movementType = MovementType.walkingright;
         }
       }
-      //*** LEFT
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-          keysPressed.contains(LogicalKeyboardKey.keyA))) {
+      // LEFT
+      if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+          keysPressed.contains(LogicalKeyboardKey.keyA)) {
         if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-          //RUN
+          // RUN
           movementType = MovementType.runleft;
         } else {
+          // WALKING
           movementType = MovementType.walkingleft;
         }
       }
-      //*** JUMP
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
-          keysPressed.contains(LogicalKeyboardKey.keyW))) {
+      // JUMP
+      if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+          keysPressed.contains(LogicalKeyboardKey.keyW)) {
         movementType = MovementType.jump;
-
-        if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD))) {
+        if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD)) {
+          // RIGHT
           movementType = MovementType.jumpright;
-        } else if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA))) {
+        } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+            keysPressed.contains(LogicalKeyboardKey.keyA)) {
+          // LEFT
           movementType = MovementType.jumpleft;
         }
       }
@@ -119,15 +123,13 @@ class PlayerComponent extends Character {
             animation = (movementType == MovementType.walkingright
                 ? walkAnimation
                 : runAnimation);
-
-            velocity.x = jumpForceSide;
-            position.x += jumpForceXY *
-                (movementType == MovementType.walkingright ? 1 : 2);
+            velocity.x = jumpForceUp;
+            // position.x += jumpForceXY *
+            //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
             animation = walkSlowAnimation;
           }
           break;
-
         case MovementType.walkingleft:
         case MovementType.runleft:
           if (right) flipHorizontally();
@@ -137,64 +139,85 @@ class PlayerComponent extends Character {
             animation = (movementType == MovementType.walkingleft
                 ? walkAnimation
                 : runAnimation);
-            velocity.x = -jumpForceSide;
-            position.x -= jumpForceXY *
-                (movementType == MovementType.walkingleft ? 1 : 2);
+            // posX--;
+            velocity.x = -jumpForceUp *
+                (movementType == MovementType.walkingright ? 1 : 2);
+            // position.x -= jumpForceXY *
+            //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
             animation = walkSlowAnimation;
           }
+
           break;
         case MovementType.jump:
-        case MovementType.jumpleft:
         case MovementType.jumpright:
-          animation = walkAnimation;
+        case MovementType.jumpleft:
           velocity.y = -jumpForceUp;
-          position.y -= jumpForceXY;
+          // position.y -= jumpForceXY;
           inGround = false;
-          animation = jumpAnimation;
           jumpUp = true;
-
-          if (movementType == MovementType.jumpleft) {
-            if (right) flipHorizontally();
-            right = false;
-
-            if (!collisionXLeft) {
-              velocity.x = -jumpForceSide;
-              position.x -= jumpForceXY;
-            }
-          } else if (movementType == MovementType.jumpright) {
+          animation = jumpAnimation;
+          if (movementType == MovementType.jumpright) {
             if (!right) flipHorizontally();
             right = true;
 
             if (!collisionXRight) {
               velocity.x = jumpForceSide;
-              position.x += jumpForceXY;
+              // position.x += jumpForceXY;
+            }
+          } else if (movementType == MovementType.jumpleft) {
+            if (right) flipHorizontally();
+            right = false;
+
+            if (!collisionXLeft) {
+              velocity.x = -jumpForceSide;
+              // position.x -= jumpForceXY;
             }
           }
 
           break;
-
-        default:
+        case MovementType.idle:
+          break;
       }
     }
+
     return true;
   }
 
   @override
   void update(double dt) {
-    super.update(dt);
-
     if (!inGround) {
       // en el aire
-      velocity.y += gravity;
-      position += velocity * dt;
 
-      if (jumpUp && velocity.y * dt > 0) {
-        velocity = Vector2.all(0);
+      if (velocity.y * dt > 0 && jumpUp) {
         jumpUp = false;
       }
+
+      velocity.y += gravity;
+    } else {
+      velocity.y = 0;
     }
+
+    position += velocity * dt;
+
+    super.update(dt);
   }
+
+  // @override
+  // void update(double dt) {
+  //   super.update(dt);
+
+  //   if (!inGround) {
+  //     // en el aire
+  //     velocity.y += gravity;
+  //     position += velocity * dt;
+
+  //     if (jumpUp && velocity.y * dt > 0) {
+  //       velocity = Vector2.all(0);
+  //       jumpUp = false;
+  //     }
+  //   }
+  // }
 
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {

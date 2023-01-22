@@ -25,18 +25,13 @@ class Character extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
   int animationIndex = 0;
 
+  MovementType movementType = MovementType.idle;
+
   double gravity = 9.8;
   Vector2 velocity = Vector2(0, 0);
 
-  MovementType movementType = MovementType.idle;
-
-  // late double screenWidth, screenHeight, centerX, centerY;
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
-
-  // int posX = 0, posY = 0;
-  //double playerSpeed = 500;
-  final double jumpForceUp = 400, jumpForceXY = 20, jumpForceSide = 100;
-
+  final double jumpForceUp = 300, jumpForceSide = 100, jumpForceXY = 20;
   bool inGround = false,
       jumpUp = false,
       right = true,
