@@ -16,13 +16,13 @@ class PlayerComponent extends Character {
   MyGame game;
 
   bool blockPlayer = false;
-  bool invensiblePlayer = false;
+  bool invinciblePlayer = false;
 
   double blockPlayerTime = 2.0;
-  double invensiblePlayerTime = 2.0;
+  double invinciblePlayerTime = 10.0;
 
   double blockPlayerElapsedTime = 0;
-  double invensiblePlayerElapsedTime = 0;
+  double invinciblePlayerElapsedTime = 0;
 
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
@@ -164,12 +164,14 @@ class PlayerComponent extends Character {
           inGround = false;
           jumpUp = true;
           animation = jumpAnimation;
+          print("jumpForceSidejumpForceSide  ");
           if (movementType == MovementType.jumpright) {
             if (!right) flipHorizontally();
             right = true;
 
             if (!collisionXRight) {
               velocity.x = jumpForceSide;
+
               // position.x += jumpForceXY;
             }
           } else if (movementType == MovementType.jumpleft) {
@@ -195,7 +197,6 @@ class PlayerComponent extends Character {
           keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         if (!right) flipHorizontally();
         right = true;
-
         if (!collisionXRight) {
           animation = runAnimation;
           // posX++;
@@ -208,7 +209,6 @@ class PlayerComponent extends Character {
           keysPressed.contains(LogicalKeyboardKey.keyD)) {
         if (!right) flipHorizontally();
         right = true;
-
         if (!collisionXRight) {
           animation = walkAnimation;
           //posX++;
@@ -218,13 +218,11 @@ class PlayerComponent extends Character {
           animation = walkSlowAnimation;
         }
       }
-
       if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
               keysPressed.contains(LogicalKeyboardKey.keyA)) &&
           keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         if (right) flipHorizontally();
         right = false;
-
         if (!collisionXLeft) {
           animation = runAnimation;
           // posX--;
@@ -237,7 +235,6 @@ class PlayerComponent extends Character {
           keysPressed.contains(LogicalKeyboardKey.keyA)) {
         if (right) flipHorizontally();
         right = false;
-
         if (!collisionXLeft) {
           animation = walkAnimation;
           velocity.x = -jumpForceUp;
@@ -246,7 +243,6 @@ class PlayerComponent extends Character {
           animation = walkSlowAnimation;
         }
       }
-
       //***Y */
       if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
           keysPressed.contains(LogicalKeyboardKey.keyW)) {
@@ -256,12 +252,10 @@ class PlayerComponent extends Character {
         inGround = false;
         jumpUp = true;
         animation = jumpAnimation;
-
         if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
             keysPressed.contains(LogicalKeyboardKey.keyA)) {
           if (right) flipHorizontally();
           right = false;
-
           if (!collisionXLeft) {
             velocity.x = -jumpForceSide;
             position.x -= jumpForceXY;
@@ -270,7 +264,6 @@ class PlayerComponent extends Character {
             keysPressed.contains(LogicalKeyboardKey.keyD)) {
           if (!right) flipHorizontally();
           right = true;
-
           if (!collisionXRight) {
             velocity.x = jumpForceSide;
             position.x += jumpForceXY;
@@ -291,13 +284,20 @@ class PlayerComponent extends Character {
 
   @override
   void update(double dt) {
-    
     if (blockPlayer) {
       if (blockPlayerElapsedTime > blockPlayerTime) {
         blockPlayer = false;
         blockPlayerElapsedTime = 0.0;
       }
-      blockPlayerElapsedTime +=dt;
+      blockPlayerElapsedTime += dt;
+    }
+
+    if (invinciblePlayer) {
+      if (invinciblePlayerElapsedTime > invinciblePlayerTime) {
+        invinciblePlayer = false;
+        invinciblePlayerElapsedTime = 0.0;
+      }
+      invinciblePlayerElapsedTime += dt;
     }
 
     if (!inGround) {
@@ -338,7 +338,7 @@ class PlayerComponent extends Character {
       //velocity = Vector2.all(0);
     }
 
-    if (game.colisionMeteors >= 3) {
+    if (game.colisionMeteors >= 3 && !invinciblePlayer) {
       reset(dead: true);
     }
 
@@ -354,9 +354,9 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
-    if (other is MeteorComponent /*&& body.isColliding*/) {
+    if (other is MeteorComponent && !invinciblePlayer /*&& body.isColliding*/) {
       game.colisionMeteors++;
-      print('colision ${game.colisionMeteors}');
+      //print('colision ${game.colisionMeteors}');
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
     }
@@ -367,6 +367,8 @@ class PlayerComponent extends Character {
   void reset({bool dead = false}) {
     movementType = MovementType.idle;
     blockPlayer = true;
+    invinciblePlayer = true;
+
     if (dead) {
       animation = deadAnimation;
       deadAnimation.onComplete = () {
@@ -376,7 +378,8 @@ class PlayerComponent extends Character {
       };
     } else {
       animation = idleAnimation;
-      position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      position =
+          Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight / 4);
       size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
     }
     game.colisionMeteors = 0;

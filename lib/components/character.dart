@@ -15,7 +15,7 @@ enum MovementType {
 class Character extends SpriteAnimationComponent
     with KeyboardHandler, CollisionCallbacks {
   int animationIndex = 0;
-  
+
   MovementType movementType = MovementType.idle;
 
   double gravity = 9.8;
