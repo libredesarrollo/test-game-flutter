@@ -1,7 +1,3 @@
-import 'dart:ui';
-
-import 'package:testgame/components/ground.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
@@ -10,6 +6,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
 
 import 'package:testgame/components/character.dart';
+import 'package:testgame/components/ground.dart';
 import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
@@ -18,12 +15,19 @@ class PlayerComponent extends Character {
   Vector2 mapSize;
   MyGame game;
 
+  bool blockPlayer = false;
+  bool invensiblePlayer = false;
+
+  double blockPlayerTime = 2.0;
+  double invensiblePlayerTime = 2.0;
+
+  double blockPlayerElapsedTime = 0;
+  double invensiblePlayerElapsedTime = 0;
+
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
     debugMode = true;
   }
-
-  int count = 0;
 
   @override
   Future<void>? onLoad() async {
@@ -47,28 +51,30 @@ class PlayerComponent extends Character {
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
-    size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
-
     reset();
 
     body = RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
-        position: Vector2(25, 10))
+        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
+        position: Vector2(25, 0))
       ..collisionType = CollisionType.active;
 
     foot = RectangleHitbox(
-      size: Vector2(50, 10),
-      position: Vector2(70, spriteSheetWidth / 4 - 70),
-    )..collisionType = CollisionType.passive;
+        size: Vector2(50, 10),
+        position: Vector2(55, spriteSheetHeight / 4 - 20))
+      ..collisionType = CollisionType.passive;
 
-    add(foot);
     add(body);
+    add(foot);
 
     return super.onLoad();
   }
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (blockPlayer) {
+      return true;
+    }
+
     if (keysPressed.isEmpty) {
       animation = idleAnimation;
       movementType = MovementType.idle;
@@ -123,7 +129,8 @@ class PlayerComponent extends Character {
             animation = (movementType == MovementType.walkingright
                 ? walkAnimation
                 : runAnimation);
-            velocity.x = jumpForceUp;
+            velocity.x = jumpForceUp *
+                (movementType == MovementType.walkingright ? 1 : 2);
             // position.x += jumpForceXY *
             //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
@@ -141,7 +148,7 @@ class PlayerComponent extends Character {
                 : runAnimation);
             // posX--;
             velocity.x = -jumpForceUp *
-                (movementType == MovementType.walkingright ? 1 : 2);
+                (movementType == MovementType.walkingleft ? 1 : 2);
             // position.x -= jumpForceXY *
             //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
@@ -179,13 +186,120 @@ class PlayerComponent extends Character {
         case MovementType.idle:
           break;
       }
+
+      // solo puede saltar o caminar/correr si el player esta en el piso
+      //***X */
+      // correr
+      /*   if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+              keysPressed.contains(LogicalKeyboardKey.keyD)) &&
+          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        if (!right) flipHorizontally();
+        right = true;
+
+        if (!collisionXRight) {
+          animation = runAnimation;
+          // posX++;
+          velocity.x = jumpForceUp;
+          position.x += jumpForceXY * 2;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+          keysPressed.contains(LogicalKeyboardKey.keyD)) {
+        if (!right) flipHorizontally();
+        right = true;
+
+        if (!collisionXRight) {
+          animation = walkAnimation;
+          //posX++;
+          velocity.x = jumpForceUp;
+          position.x += jumpForceXY;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      }
+
+      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+              keysPressed.contains(LogicalKeyboardKey.keyA)) &&
+          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        if (right) flipHorizontally();
+        right = false;
+
+        if (!collisionXLeft) {
+          animation = runAnimation;
+          // posX--;
+          velocity.x = -jumpForceUp;
+          position.x -= jumpForceXY * 2;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+          keysPressed.contains(LogicalKeyboardKey.keyA)) {
+        if (right) flipHorizontally();
+        right = false;
+
+        if (!collisionXLeft) {
+          animation = walkAnimation;
+          velocity.x = -jumpForceUp;
+          position.x -= jumpForceXY;
+        } else {
+          animation = walkSlowAnimation;
+        }
+      }
+
+      //***Y */
+      if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+          keysPressed.contains(LogicalKeyboardKey.keyW)) {
+        animation = walkAnimation;
+        velocity.y = -jumpForceUp;
+        position.y -= jumpForceXY;
+        inGround = false;
+        jumpUp = true;
+        animation = jumpAnimation;
+
+        if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+            keysPressed.contains(LogicalKeyboardKey.keyA)) {
+          if (right) flipHorizontally();
+          right = false;
+
+          if (!collisionXLeft) {
+            velocity.x = -jumpForceSide;
+            position.x -= jumpForceXY;
+          }
+        } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+            keysPressed.contains(LogicalKeyboardKey.keyD)) {
+          if (!right) flipHorizontally();
+          right = true;
+
+          if (!collisionXRight) {
+            velocity.x = jumpForceSide;
+            position.x += jumpForceXY;
+          }
+        }
+      }*/
     }
+
+    // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+    //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
+    //   animation = walkAnimation;
+
+    //   posY++;
+    // }
 
     return true;
   }
 
   @override
   void update(double dt) {
+    
+    if (blockPlayer) {
+      if (blockPlayerElapsedTime > blockPlayerTime) {
+        blockPlayer = false;
+        blockPlayerElapsedTime = 0.0;
+      }
+      blockPlayerElapsedTime +=dt;
+    }
+
     if (!inGround) {
       // en el aire
 
@@ -194,6 +308,7 @@ class PlayerComponent extends Character {
       }
 
       velocity.y += gravity;
+      //
     } else {
       velocity.y = 0;
     }
@@ -201,40 +316,6 @@ class PlayerComponent extends Character {
     position += velocity * dt;
 
     super.update(dt);
-  }
-
-  // @override
-  // void update(double dt) {
-  //   super.update(dt);
-
-  //   if (!inGround) {
-  //     // en el aire
-  //     velocity.y += gravity;
-  //     position += velocity * dt;
-
-  //     if (jumpUp && velocity.y * dt > 0) {
-  //       velocity = Vector2.all(0);
-  //       jumpUp = false;
-  //     }
-  //   }
-  // }
-
-  @override
-  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
-    if (other is ScreenHitbox) {
-      if (points.first[0] <= 0.0) {
-        // left
-        collisionXLeft = true;
-      } else if (points.first[0] >= mapSize.x
-          //MediaQueryData.fromWindow(window).size.height
-
-          ) {
-        // left
-        collisionXRight = true;
-      }
-    }
-
-    super.onCollisionStart(points, other);
   }
 
   @override
@@ -252,10 +333,13 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (other is Ground && !jumpUp) {
-      if (foot.isColliding) {
-        inGround = true;
-      }
+    if (other is Ground && !jumpUp && foot.isColliding) {
+      inGround = true;
+      //velocity = Vector2.all(0);
+    }
+
+    if (game.colisionMeteors >= 3) {
+      reset(dead: true);
     }
 
     super.onCollision(points, other);
@@ -270,18 +354,11 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
-    if (other is MeteorComponent && body.isColliding) {
-      print("dead ${game.colisionMeteors}");
+    if (other is MeteorComponent /*&& body.isColliding*/) {
       game.colisionMeteors++;
-
+      print('colision ${game.colisionMeteors}');
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
-
-      //reset(dead: true);
-    }
-
-    if (game.colisionMeteors >= 3) {
-      reset(dead: true);
     }
 
     super.onCollisionEnd(other);
@@ -289,23 +366,21 @@ class PlayerComponent extends Character {
 
   void reset({bool dead = false}) {
     movementType = MovementType.idle;
-    velocity = Vector2.all(0);
+    blockPlayer = true;
     if (dead) {
       animation = deadAnimation;
-
       deadAnimation.onComplete = () {
         deadAnimation.reset();
         animation = idleAnimation;
-        game.colisionMeteors = 0;
         position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       };
     } else {
       animation = idleAnimation;
-      game.colisionMeteors = 0;
       position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
     }
-    // jumpVelocity = 0.0;
-    // jumpCount = 0;
-    // status = TRexStatus.running;
+    game.colisionMeteors = 0;
+
+    //position = Vector2(spriteSheetWidth / 4, 0);
   }
 }
