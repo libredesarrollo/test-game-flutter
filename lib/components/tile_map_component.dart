@@ -3,11 +3,13 @@ import 'package:flame/components.dart';
 
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:testgame/components/ground.dart';
+import 'package:testgame/components/life.dart';
 
 import 'package:tiled/tiled.dart';
 
 class TileMapComponent extends PositionComponent {
   late TiledComponent tiledMap;
+  List<Life> lifes = [];
 
   @override
   Future<void>? onLoad() async {
@@ -17,11 +19,6 @@ class TileMapComponent extends PositionComponent {
     final objGroup = tiledMap.tileMap.getLayer<ObjectGroup>("ground");
 
     for (final obj in objGroup!.objects) {
-      print(obj.x);
-      print(obj.x);
-      print(obj.x);
-      print(obj.x);
-
       add(Ground(
           size: Vector2(obj.width, 20), position: Vector2(obj.x, obj.y)));
     }
@@ -40,5 +37,17 @@ class TileMapComponent extends PositionComponent {
     // });
 
     return super.onLoad();
+  }
+
+  void addConsumibles() {
+    final lifeGroup = tiledMap.tileMap.getLayer<ObjectGroup>("consumible_food");
+
+    lifes.forEach((l) => l.removeFromParent());
+
+    lifes.clear();
+    for (final obj in lifeGroup!.objects) {
+      lifes.add(Life(position: Vector2(obj.x, obj.y)));
+      add(lifes.last);
+    }
   }
 }

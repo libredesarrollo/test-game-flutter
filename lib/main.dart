@@ -9,16 +9,16 @@ import 'package:testgame/components/tile_map_component.dart';
 import 'package:testgame/overlay/game_over.dart';
 import 'package:testgame/overlay/stadistics.dart';
 
-
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   double elapsedTime = 0.0;
   int colisionMeteors = 0;
   late PlayerComponent player;
+  late TileMapComponent background;
 
   @override
   Future<void>? onLoad() {
-    var background = TileMapComponent();
+    background = TileMapComponent();
     add(background);
 
     background.loaded.then(
@@ -46,6 +46,10 @@ class MyGame extends FlameGame
 
     elapsedTime += dt;
     super.update(dt);
+  }
+
+  void addConsumibles() {
+    background.addConsumibles();
   }
 
   @override

@@ -41,7 +41,6 @@ class _StatisticsState extends State<Statistics> {
                       size: 40)),
               GestureDetector(
                   onTap: () {
-                    print("ssssss");
                     widget.game.player.reset();
                   },
                   child:
