@@ -44,7 +44,7 @@ class PlayerComponent extends Character {
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     jumpAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .08, loop: false);
+        xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .02, loop: false);
     runAnimation = spriteSheet.createAnimationByLimit(
         xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
     walkAnimation = spriteSheet.createAnimationByLimit(
@@ -163,7 +163,7 @@ class PlayerComponent extends Character {
       case MovementType.jump:
       case MovementType.jumpright:
       case MovementType.jumpleft:
-        if (movementType == MovementType.jump) {
+        if (movementType == MovementType.jump && inGround) {
           velocity.y = -jumpForceUp;
           position.y -= 20; // ************************
         }
