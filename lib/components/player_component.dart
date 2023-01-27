@@ -126,6 +126,7 @@ class PlayerComponent extends Character {
     switch (movementType) {
       case MovementType.walkingright:
       case MovementType.runright:
+        print("------" + collisionXRight.toString());
         if (!right) flipHorizontally();
         right = true;
 
@@ -145,7 +146,7 @@ class PlayerComponent extends Character {
       case MovementType.runleft:
         if (right) flipHorizontally();
         right = false;
-
+        print("******" + collisionXLeft.toString());
         if (!collisionXLeft) {
           animation = (movementType == MovementType.walkingleft
               ? walkAnimation
@@ -165,7 +166,7 @@ class PlayerComponent extends Character {
       case MovementType.jumpleft:
         if (movementType == MovementType.jump && inGround) {
           velocity.y = -jumpForceUp;
-          position.y -= 20; // ************************
+          //position.y -= 20; // ************************
         }
         inGround = false;
         jumpUp = true;
@@ -229,19 +230,24 @@ class PlayerComponent extends Character {
 
     position += velocity * dt;
 
+    if (position.y > mapSize.y) {
+      position.y = mapSize.y - spriteSheetHeight / 4;
+      velocity = Vector2.all(0);
+    }
+
+    print(position.y.toString());
+
     super.update(dt);
   }
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
+    print(other.toString() + " " + points.first[0].toString());
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
         collisionXLeft = true;
-      } else if (points.first[0] >= mapSize.x
-          //MediaQueryData.fromWindow(window).size.height
-
-          ) {
+      } else if (points.first[0] >= mapSize.x - size.x) {
         // left
         collisionXRight = true;
       }

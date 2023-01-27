@@ -8,7 +8,6 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flame/components.dart';
-import 'package:testgame/components/test/main%20copy%203.dart';
 
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
