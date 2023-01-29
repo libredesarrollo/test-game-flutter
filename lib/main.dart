@@ -77,3 +77,61 @@ void main() {
     initialActiveOverlays: const ['Statistics'],
   ));
 }
+/*
+
+   movePlayer(dt);
+    playing = true;
+    movingToTouchedLocation = false;
+
+    if (!isMoving) {
+      isMoving = true;
+      audioPlayerRunning = await FlameAudio.loopLongAudio('sounds/running.wav', volume: 1.0);
+    }
+    
+    switch (hud.joystick.direction) {
+      case JoystickDirection.up:
+      case JoystickDirection.upRight:
+      case JoystickDirection.upLeft:
+        animation = upAnimation;
+        currentDirection = Character.up;
+      break;
+      case JoystickDirection.down:
+      case JoystickDirection.downRight:
+      case JoystickDirection.downLeft:
+        animation = downAnimation;
+        currentDirection = Character.down;
+      break;
+      case JoystickDirection.left:
+        animation = leftAnimation;
+        currentDirection = Character.left;
+      break;
+      case JoystickDirection.right:
+        animation = rightAnimation;
+        currentDirection = Character.right;
+      break;
+      case JoystickDirection.idle:
+        animation = null;
+      break;
+    }
+void movePlayer(double delta) {
+    if (!(hasCollided && collisionDirection == currentDirection)) {
+      if (movingToTouchedLocation) {
+        position.add((targetLocation - position).normalized() * (speed * delta));
+      } else {
+        switch (currentDirection) {
+          case Character.left:
+            position.add(Vector2(delta * -speed, 0));
+          break;
+          case Character.right:
+            position.add(Vector2(delta * speed, 0));
+          break;
+          case Character.up:
+            position.add(Vector2(0, delta * -speed));
+          break;
+          case Character.down:
+            position.add(Vector2(0, delta * speed));
+          break;
+        }
+      }
+    }
+ */
