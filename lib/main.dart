@@ -34,7 +34,7 @@ class MyGame extends FlameGame
 
     add(ScreenHitbox());
 
-    return super.onLoad();
+    //return super.onLoad();
   }
 
   @override
