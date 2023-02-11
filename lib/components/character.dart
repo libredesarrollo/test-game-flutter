@@ -24,6 +24,8 @@ class Character extends SpriteAnimationComponent
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
   final double jumpForceUp = 600, jumpForceSide = 100, jumpForceXY = 20;
 
+  final double terminalVelocity = 150;
+
   bool inGround = false,
       jumpUp = false,
       right = true,
