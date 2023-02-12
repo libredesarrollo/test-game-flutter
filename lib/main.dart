@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:testgame/components/meteor_component.dart';
+import 'package:testgame/components/sky.dart';
 import 'package:testgame/components/player_component.dart';
 import 'package:testgame/components/tile_map_component.dart';
 import 'package:testgame/overlay/game_over.dart';
@@ -19,12 +20,14 @@ class MyGame extends FlameGame
   @override
   Future<void>? onLoad() {
     background = TileMapComponent();
+    add(Sky(/*size: background.tiledMap.size*/));
     add(background);
 
     background.loaded.then(
       (value) {
         player = PlayerComponent(mapSize: background.tiledMap.size, game: this);
         add(player);
+
         print(background.tiledMap.size.y);
         camera.followComponent(player,
             worldBounds: Rect.fromLTRB(

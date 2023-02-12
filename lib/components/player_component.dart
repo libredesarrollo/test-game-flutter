@@ -122,6 +122,8 @@ class PlayerComponent extends Character {
         }
       }
 
+      hasJumped = keysPressed.contains(LogicalKeyboardKey.space);
+
       switch (movementType) {
         case MovementType.walkingright:
         case MovementType.runright:
