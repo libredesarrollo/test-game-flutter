@@ -28,7 +28,6 @@ class MyGame extends FlameGame
         player = PlayerComponent(mapSize: background.tiledMap.size, game: this);
         add(player);
 
-        print(background.tiledMap.size.y);
         camera.followComponent(player,
             worldBounds: Rect.fromLTRB(
                 0, 0, background.tiledMap.size.x, background.tiledMap.size.y));

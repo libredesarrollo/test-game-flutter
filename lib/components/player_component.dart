@@ -165,7 +165,7 @@ class PlayerComponent extends Character {
         case MovementType.jumpright:
         case MovementType.jumpleft:
           //velocity.y = -jumpForceUp;
-          print("MovementType.jump");
+          //print("MovementType.jump");
           // position.y -= jumpForceXY;
           hasJumped = true;
 
@@ -199,7 +199,7 @@ class PlayerComponent extends Character {
 
   @override
   void update(double dt) {
-    print(dt);
+    // print(dt);
     if (blockPlayer) {
       if (blockPlayerElapseTime > blockPlayerTime) {
         blockPlayer = false;
@@ -223,7 +223,7 @@ class PlayerComponent extends Character {
       inGround = false;
       jumpUp = true;
       //velocity.y = velocity.y.clamp(-jumpForceUp, terminalVelocity);
-      print("MovementType.jump " + velocity.y.toString());
+      //print("MovementType.jump " + velocity.y.toString());
 
       hasJumped = false;
     }
@@ -240,9 +240,11 @@ class PlayerComponent extends Character {
     // Prevent ember from jumping to crazy fast.
     //velocity.y = velocity.y.clamp(-jumpForceUp, terminalVelocity);
 
-    print("jumping " + velocity.y.toString());
+    //print("jumping " + velocity.y.toString());
+    print("${position.x} - ${size.x}");
+    // if ((position.x - 70 > 0) && (position.x < mapSize.x - 70)) {
     position += velocity * dt;
-
+    // }
     super.update(dt);
   }
 
@@ -283,7 +285,9 @@ class PlayerComponent extends Character {
 
   @override
   void onCollisionEnd(PositionComponent other) {
-    collisionXLeft = collisionXRight = false;
+    if (other is ScreenHitbox) {
+      collisionXLeft = collisionXRight = false;
+    }
 
     if (other is Ground) {
       inGround = false;
