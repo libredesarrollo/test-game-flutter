@@ -12,6 +12,8 @@ import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
+import 'package:flame_audio/flame_audio.dart';
+
 class PlayerComponent extends Character {
   Vector2 mapSize;
   MyGame game;
@@ -273,6 +275,7 @@ class PlayerComponent extends Character {
       game.colisionMeteors--;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
+
       other.removeFromParent();
     }
 
@@ -298,6 +301,7 @@ class PlayerComponent extends Character {
       game.colisionMeteors++;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
+      FlameAudio.bgm.play('explosion.mp3');
     }
 
     super.onCollisionEnd(other);

@@ -10,6 +10,9 @@ import 'package:testgame/components/tile_map_component.dart';
 import 'package:testgame/overlay/game_over.dart';
 import 'package:testgame/overlay/stadistics.dart';
 
+import 'package:flame_audio/audio_pool.dart';
+import 'package:flame_audio/flame_audio.dart';
+
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   double elapsedTime = 0.0;
@@ -19,6 +22,8 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
+    FlameAudio.bgm.initialize();
+
     background = TileMapComponent();
     add(Sky(/*size: background.tiledMap.size*/));
     add(background);
