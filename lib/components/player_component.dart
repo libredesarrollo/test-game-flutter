@@ -251,12 +251,12 @@ class PlayerComponent extends Character {
   }
 
   @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is ScreenHitbox) {
-      if (points.first[0] <= 0.0) {
+      if (intersectionPoints.first[0] <= 0.0) {
         // left
         collisionXLeft = true;
-      } else if (points.first[0] >= mapSize.x
+      } else if (intersectionPoints.first[0] >= mapSize.x
           //MediaQueryData.fromWindow(window).size.height
 
           ) {
@@ -265,8 +265,14 @@ class PlayerComponent extends Character {
       }
     }
 
+    if (foot.isColliding) {
+      print(
+          "${intersectionPoints.first.toString()}    ${intersectionPoints.length}    ${position.y}  ${position.y}   ");
+    }
+
     if (other is Ground && !jumpUp && foot.isColliding) {
       inGround = true;
+      position.y = other.position.y - size.y / 2 + 10;
 
       //velocity = Vector2.all(0);
     }
@@ -283,7 +289,7 @@ class PlayerComponent extends Character {
       reset(dead: true);
     }
 
-    super.onCollision(points, other);
+    super.onCollision(intersectionPoints, other);
   }
 
   @override
@@ -301,7 +307,7 @@ class PlayerComponent extends Character {
       game.colisionMeteors++;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
-      FlameAudio.bgm.play('explosion.mp3');
+      // FlameAudio.bgm.play('explosion.mp3');
     }
 
     super.onCollisionEnd(other);
