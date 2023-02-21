@@ -12,7 +12,7 @@ import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
-import 'package:flame_audio/flame_audio.dart';
+// import 'package:flame_audio/flame_audio.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
@@ -243,7 +243,7 @@ class PlayerComponent extends Character {
     //velocity.y = velocity.y.clamp(-jumpForceUp, terminalVelocity);
 
     //print("jumping " + velocity.y.toString());
-    print("${position.x} - ${size.x}");
+    // print("${position.x} - ${size.x}");
     // if ((position.x - 70 > 0) && (position.x < mapSize.x - 70)) {
     position += velocity * dt;
     // }
@@ -265,12 +265,13 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (foot.isColliding) {
-      print(
-          "${intersectionPoints.first.toString()}    ${intersectionPoints.length}    ${position.y}  ${position.y}   ");
-    }
+    // if (foot.isColliding) {
+    //   print(
+    //       "${intersectionPoints.first.toString()}    ${intersectionPoints.length}    ${position.y}  ${position.y}   ");
+    // }
 
-    if (other is Ground && !jumpUp && foot.isColliding) {
+    if (other is Ground && !jumpUp && foot.isColliding && !inGround) {
+      print('PISOSSSS');
       inGround = true;
       position.y = other.position.y - size.y / 2 + 10;
 
