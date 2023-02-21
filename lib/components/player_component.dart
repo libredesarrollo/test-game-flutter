@@ -12,7 +12,7 @@ import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
-// import 'package:flame_audio/flame_audio.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
@@ -309,6 +309,7 @@ class PlayerComponent extends Character {
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
       // FlameAudio.bgm.play('explosion.mp3');
+      FlameAudio.play('explosion.mp3');
     }
 
     super.onCollisionEnd(other);
