@@ -12,6 +12,7 @@ import 'package:testgame/components/meteor_component.dart';
 import 'package:testgame/main.dart';
 import 'package:testgame/utils/create_animation_by_limit.dart';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame_audio/flame_audio.dart';
 
 class PlayerComponent extends Character {
@@ -26,6 +27,9 @@ class PlayerComponent extends Character {
   bool inviciblePlayer = false;
   double inviciblePlayerTime = 8.0;
   double inviciblePlayerElapseTime = 0;
+
+  bool isMoving = false;
+  late AudioPlayer audioPlayerRunning;
 
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
@@ -84,12 +88,25 @@ class PlayerComponent extends Character {
       animation = idleAnimation;
       movementType = MovementType.idle;
       velocity = Vector2.all(0);
+      isMoving = false;
+      print('NO CAMINANDO ' + PlayerState.playing.toString());
+      if (audioPlayerRunning.state == PlayerState.playing) {
+        audioPlayerRunning.stop();
+        print('NO CAMINANDO');
+      }
+    } else {
+      if (!isMoving) {
+        print('CAMINANDO');
+        FlameAudio.loop('step.wav')
+            .then((audioPlayer) => audioPlayerRunning = audioPlayer);
+      }
     }
 
     if (inGround) {
       // RIGHT
       if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
           keysPressed.contains(LogicalKeyboardKey.keyD)) {
+        isMoving = true;
         if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
           // RUN
           movementType = MovementType.runright;
@@ -102,6 +119,7 @@ class PlayerComponent extends Character {
       if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
           keysPressed.contains(LogicalKeyboardKey.keyA)) {
         if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+          isMoving = true;
           // RUN
           movementType = MovementType.runleft;
         } else {
@@ -138,6 +156,8 @@ class PlayerComponent extends Character {
                 : runAnimation);
             velocity.x = jumpForceUp *
                 (movementType == MovementType.walkingright ? 1 : 2);
+
+            //FlameAudio.play('step.wav');
             // position.x += jumpForceXY *
             //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
@@ -158,6 +178,7 @@ class PlayerComponent extends Character {
                 (movementType == MovementType.walkingleft ? 1 : 2);
             // position.x -= jumpForceXY *
             //     (movementType == MovementType.walkingright ? 1 : 2);
+            FlameAudio.play('step.wav');
           } else {
             animation = walkSlowAnimation;
           }
@@ -170,7 +191,7 @@ class PlayerComponent extends Character {
           //print("MovementType.jump");
           // position.y -= jumpForceXY;
           hasJumped = true;
-
+          FlameAudio.play('jump.wav');
           animation = jumpAnimation;
           if (movementType == MovementType.jumpright) {
             if (!right) flipHorizontally();
@@ -288,6 +309,7 @@ class PlayerComponent extends Character {
 
     if (game.colisionMeteors >= 3 && !inviciblePlayer) {
       reset(dead: true);
+      FlameAudio.play('die.mp3');
     }
 
     super.onCollision(intersectionPoints, other);
@@ -308,7 +330,6 @@ class PlayerComponent extends Character {
       game.colisionMeteors++;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
-      // FlameAudio.bgm.play('explosion.mp3');
       FlameAudio.play('explosion.mp3');
     }
 
