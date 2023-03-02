@@ -13,7 +13,6 @@ import 'package:testgame/overlay/stadistics.dart';
 // import 'package:flame_audio/audio_pool.dart';
 // import 'package:flame_audio/flame_audio.dart';
 
-
 import 'package:flame_audio/flame_audio.dart';
 
 class MyGame extends FlameGame
@@ -25,8 +24,6 @@ class MyGame extends FlameGame
 
   @override
   Future<void>? onLoad() {
-   
-
     background = TileMapComponent();
     add(Sky(/*size: background.tiledMap.size*/));
     add(background);
@@ -42,14 +39,16 @@ class MyGame extends FlameGame
       },
     );
 
+    // startBgMusic();
+
     add(ScreenHitbox());
 
     //return super.onLoad();
   }
 
-   void startBgmMusic() {
+  void startBgMusic() {
     FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('explosion.mp3');
+    FlameAudio.bgm.play('background.wav', volume: 0.1);
   }
 
   @override

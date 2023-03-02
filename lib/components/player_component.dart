@@ -72,6 +72,11 @@ class PlayerComponent extends Character {
         position: Vector2(55, spriteSheetHeight / 4 - 20))
       ..collisionType = CollisionType.passive;
 
+    FlameAudio.loop('step.wav').then((audioPlayer) {
+      audioPlayerRunning = audioPlayer;
+      audioPlayerRunning.stop();
+    });
+
     add(body);
     add(foot);
 
@@ -89,16 +94,15 @@ class PlayerComponent extends Character {
       movementType = MovementType.idle;
       velocity = Vector2.all(0);
       isMoving = false;
-      print('NO CAMINANDO ' + PlayerState.playing.toString());
+
       if (audioPlayerRunning.state == PlayerState.playing) {
         audioPlayerRunning.stop();
-        print('NO CAMINANDO');
       }
     } else {
       if (!isMoving) {
-        print('CAMINANDO');
-        FlameAudio.loop('step.wav')
-            .then((audioPlayer) => audioPlayerRunning = audioPlayer);
+        if (audioPlayerRunning.state == PlayerState.stopped) {
+          audioPlayerRunning.resume();
+        }
       }
     }
 
@@ -178,7 +182,7 @@ class PlayerComponent extends Character {
                 (movementType == MovementType.walkingleft ? 1 : 2);
             // position.x -= jumpForceXY *
             //     (movementType == MovementType.walkingright ? 1 : 2);
-            FlameAudio.play('step.wav');
+            //FlameAudio.play('step.wav');
           } else {
             animation = walkSlowAnimation;
           }
