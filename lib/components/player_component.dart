@@ -334,7 +334,7 @@ class PlayerComponent extends Character {
       game.colisionMeteors++;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
-      FlameAudio.play('explosion.mp3');
+      FlameAudio.play('explosion.wav');
     }
 
     super.onCollisionEnd(other);

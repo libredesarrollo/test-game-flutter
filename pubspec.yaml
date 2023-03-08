@@ -82,6 +82,7 @@ flutter:
     - assets/images/bg.jpg
     - assets/images/meteor.png
     - assets/audio/explosion.mp3
+    - assets/audio/explosion.wav
     - assets/audio/die.mp3
     - assets/audio/step.wav
     - assets/audio/jump.wav
